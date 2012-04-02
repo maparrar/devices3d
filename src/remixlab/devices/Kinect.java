@@ -4,10 +4,13 @@
  * @author Miguel Alejandro Parra Romero [maparrar@unal.edu.co]
  * @author Jean Pierre Charalambos [jpcharalambosh@unal.edu.co]
  * 
- * Kinect Class, this class manage the Kinect interaction, now only two hands
+ * Kinect Class, this class manage the Kinect interaction
  * are supported.
  * */
 package remixlab.devices;
+
+import java.awt.Color;
+import java.util.Iterator;
 
 import processing.core.PApplet;
 import processing.core.PVector;
@@ -22,8 +25,8 @@ public class Kinect{
 	XnVFlowRouter     flowRouter;		//NITE Object
 	PointControl ctrlPoint;				//Return the points from sensor
 	
-	
-	PVector auxiliar; // Vector temporal para almacenar el punto anterior de una mano (solo para pruebas)
+	int numHands;						//Quantity of hands
+	Hand[] hands;						//Array of hands
 	
 
 	/**
@@ -38,7 +41,7 @@ public class Kinect{
 		context.setMirror(true);
 		
 		// enable depthMap generation 
-		context.enableDepth();
+		//context.enableDepth();
 		
 		// enable the hands + gesture
 		context.enableGesture();
@@ -51,12 +54,17 @@ public class Kinect{
 		ctrlPoint = new PointControl(this);
 		flowRouter = new XnVFlowRouter();
 		flowRouter.SetActive(ctrlPoint);
-		
-		
+		//Set the session manager
 		sessionManager.AddListener(flowRouter);
 		
+		//Set the array of hands
+		numHands=2;
+		hands=new Hand[numHands];
+		hands[0]=new Hand(20,new Color(255,0,0));
+		hands[1]=new Hand(20,new Color(0,255,0));
 		
-		auxiliar = new PVector();
+		
+		
 	}
 	/**
 	 * Return the Width provided by the context
@@ -69,7 +77,20 @@ public class Kinect{
 	 * */
 	public int height(){
 		return context.depthHeight();
-	}	
+	}
+	
+	/**
+	 * Get the specified hand
+	 * */
+	public Hand getHand(int idHand){
+		return hands[idHand];
+	}
+	/**
+	 * Get the number of hands registered
+	 * */
+	public int getNumberHands(){
+		return ctrlPoint.getHands();
+	}
 	/**
 	 * Update the context and the session manager
 	 * */
@@ -79,41 +100,64 @@ public class Kinect{
 		// update nite
 		context.update(sessionManager);
 		// draw depthImageMap
-		parent.image(context.depthImage(),0,0);
+		//parent.image(context.depthImage(),0,0);
+		
+		
+		
+		//drawHands();
+		
 	}
 	
 	/**
 	 * Get the callback signal when a hand is updated in the sensor
 	 * */
 	public void setHands(long handId,PVector handPoint){
-		//PApplet.println("Updating the hands");
-		
-		// 1. Almacenar los últimos n puntos de la mano
-		// 2. Hacer una operación para determinar el vector de cambio
-		// El vector de cambio es un vector tridimensional que apunta hacia
-		// donde se hizo el movimiento
-		// la longitud del vector representa la velocidad de cambio
-		// 3. Se unen los dos vectores de cambio que aparecen en la pantalla
-		// 4. Se comparan los valores de los vectores de cambio con algunos
-		// almacenados
-		// 5. Si corresponden a alguno en particular, se ejecuta el gesto
-
-		// println(colorIndex+":: "+firstVec);
-
-		// PRUEBA DE GESTOS
-		// Mover hacia el frente
-		if (Math.abs(auxiliar.z - handPoint.z) > 50) {
-			PApplet.println("hand: " + handId + " -> click");
+		//Assign the point to the hand using module
+		hands[(int) (handId%2)].addPoint(handPoint);
+	}
+	/**
+	 * Remove the list of points of a hand if it is destroyed in the context
+	 * */
+	public void deleteHand(long handId){
+		//Delete the points of the hand using module
+		hands[(int) (handId%2)].reset();
+	}
+	
+	/**
+	 * Draw the points of the set of hands
+	 * */
+	public void drawHands(){
+		for(int i=0;i<numHands;i++){
+			if(hands[i].points.size()>0){
+				parent.pushStyle();
+					parent.noFill();
+					PVector vec;
+					PVector firstVec;
+					PVector screenPos = new PVector();
+					parent.strokeWeight(2);
+					parent.stroke(hands[i].color.getRGB());
+					// draw line
+					firstVec = null;
+					Iterator<PVector> itr = hands[i].points.iterator();
+					parent.beginShape();
+						while (itr.hasNext()){
+							vec = itr.next();
+							if(firstVec == null){
+								firstVec = vec;
+							}
+							// calculate the screen position
+							context.convertRealWorldToProjective(vec,screenPos);
+							parent.vertex(screenPos.x,screenPos.y);
+						}
+					parent.endShape();
+					// draw current position of the hand
+					if(firstVec != null){
+						parent.strokeWeight(8);
+						context.convertRealWorldToProjective(firstVec,screenPos);
+						parent.point(screenPos.x,screenPos.y);
+					}
+				parent.popStyle();			
+			}
 		}
-		// Mover a la derecha
-		if ((handPoint.x - auxiliar.x) > 50) {
-			PApplet.println("hand: " + handId + " -> derecha");
-		}
-		// Mover hacia arriba
-		if ((handPoint.y - auxiliar.y) > 50) {
-			PApplet.println("hand: " + handId + " -> arriba");
-		}
-
-		auxiliar = handPoint;
 	}
 }

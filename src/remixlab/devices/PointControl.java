@@ -14,12 +14,14 @@ import SimpleOpenNI.XnVHandPointContext;
 import SimpleOpenNI.XnVPointControl;
 class PointControl extends XnVPointControl{
 	Kinect kinect;
+	int cantHands;
 	/**
 	 * PointControl constructor
 	 * @param k: parent object where the callbacks return data from the sensor
 	 * */
 	public PointControl(Kinect k){
 		kinect=k;
+		cantHands=0;
 	}
 	/**
 	 * Hands callbacks
@@ -28,12 +30,20 @@ class PointControl extends XnVPointControl{
 		PApplet.println("OnPointCreate, handId: " + cxt.getNID());
 		PVector vector = new PVector(cxt.getPtPosition().getX(), cxt.getPtPosition().getY(), cxt.getPtPosition().getZ());
 		kinect.setHands(cxt.getNID(),vector);
+		cantHands++;
 	}
 	public void OnPointUpdate(XnVHandPointContext cxt){
 		PVector vector = new PVector(cxt.getPtPosition().getX(), cxt.getPtPosition().getY(), cxt.getPtPosition().getZ());
 		kinect.setHands(cxt.getNID(),vector);
+		
+		
 	}
 	public void OnPointDestroy(long nID){
 		PApplet.println("OnPointDestroy, handId: " + nID);
+		kinect.deleteHand(nID);
+		cantHands--;
+	}
+	public int getHands(){
+		return cantHands;
 	}
 }
