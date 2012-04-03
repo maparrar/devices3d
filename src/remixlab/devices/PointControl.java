@@ -5,6 +5,7 @@
  * @author Jean Pierre Charalambos [jpcharalambosh@unal.edu.co]
  * 
  * Modification of the Hands example of the library SimpleOpenNI, see (http://code.google.com/p/simple-openni/)
+ * Return the data of callbacks functions of the Kinect
  * */
 package remixlab.devices;
 
@@ -15,6 +16,7 @@ import SimpleOpenNI.XnVPointControl;
 class PointControl extends XnVPointControl{
 	Kinect kinect;
 	int cantHands;
+	/////////////////////////////////////// CONSTRUCTORS ///////////////////////////////////////
 	/**
 	 * PointControl constructor
 	 * @param k: parent object where the callbacks return data from the sensor
@@ -23,9 +25,16 @@ class PointControl extends XnVPointControl{
 		kinect=k;
 		cantHands=0;
 	}
+	
+	/////////////////////////////////////// GET AND SET ///////////////////////////////////////
 	/**
-	 * Hands callbacks
+	 * Get the quantity of hands registered 
 	 * */
+	public int getHands(){
+		return cantHands;
+	}
+	
+	/////////////////////////////////////// CALLBAKS ///////////////////////////////////////
 	public void OnPointCreate(XnVHandPointContext cxt){
 		PApplet.println("OnPointCreate, handId: " + cxt.getNID());
 		PVector vector = new PVector(cxt.getPtPosition().getX(), cxt.getPtPosition().getY(), cxt.getPtPosition().getZ());
@@ -35,15 +44,9 @@ class PointControl extends XnVPointControl{
 	public void OnPointUpdate(XnVHandPointContext cxt){
 		PVector vector = new PVector(cxt.getPtPosition().getX(), cxt.getPtPosition().getY(), cxt.getPtPosition().getZ());
 		kinect.setHands(cxt.getNID(),vector);
-		
-		
 	}
 	public void OnPointDestroy(long nID){
 		PApplet.println("OnPointDestroy, handId: " + nID);
-		kinect.deleteHand(nID);
 		cantHands--;
-	}
-	public int getHands(){
-		return cantHands;
 	}
 }

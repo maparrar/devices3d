@@ -4,55 +4,37 @@
  * @author Miguel Alejandro Parra Romero [maparrar@unal.edu.co]
  * @author Jean Pierre Charalambos [jpcharalambosh@unal.edu.co]
  * 
- * Hand Class, this class store an ArrayList of points, with these points we calculate the gesture
- * Modification of the Hands example of the library SimpleOpenNI, see (http://code.google.com/p/simple-openni/)
+ * Hand Class, this class store a point with the position of the hand
  * */
 package remixlab.devices;
 
 import java.awt.Color;
-import java.util.ArrayList;
 import processing.core.PVector;
 
 public class Hand {
-	ArrayList<PVector> points;
-	int maxPoints;
+	PVector point;
 	Color color;
-	
+	/////////////////////////////////////// CONSTRUCTORS ///////////////////////////////////////
 	public Hand(){
-		points= new ArrayList<PVector>();
-		maxPoints=10;
+		point=new PVector();
 	}
-	public Hand(int max,Color col){
-		points= new ArrayList<PVector>();
-		maxPoints=max;
+	public Hand(Color col){
+		point=new PVector();
 		color=col;
 	}
+	
+	/////////////////////////////////////// GET AND SET ///////////////////////////////////////
 	/**
-	 * Return the last point
+	 * Return the point
 	 * */
-	public PVector getLast(){
-		if(points.size()>0){
-			return points.get(0);
-		}else{
-			return new PVector(0,0,0);
-		}
-		
+	public PVector getPoint(){
+		return point;
 	}
 	/**
-	 * Add a new point to the points list, if the quantity of points i greater than
-	 * maxPoints, delete the first added point
-	 * @param point: point to add in the ArrayList 
+	 * Set the point
+	 * @param point:
 	 * */
-	public void addPoint(PVector point){
-		points.add(0,point);      
-	    if(points.size()>maxPoints){
-	    	points.remove(points.size()-1);
-	    }
-	}
-	/**
-	 * Reset the ArrayList of points
-	 * */
-	public void reset(){
-		points.clear();
+	public void setPoint(PVector pointIn){
+		point=pointIn;
 	}
 }

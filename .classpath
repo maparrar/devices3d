@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="lib/base/core/ant.jar">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="devices3d/lib/base/core"/>
@@ -21,12 +20,19 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="devices3d/lib/user/SimpleOpenNI"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/user/fullscreen/fullscreen.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="devices3d/lib/user/fullscreen"/>
+			<attribute name="javadoc_location" value="file:/home/alejo/tesis2/sketches/libraries/fullscreen/reference/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="lib/user/proscene/proscene.jar" sourcepath="/home/alejo/tesis2/sketches/libraries/proscene/src">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="devices3d/lib/user/proscene"/>
 			<attribute name="javadoc_location" value="file:/home/alejo/tesis2/sketches/libraries/proscene/reference/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

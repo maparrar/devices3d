@@ -10,154 +10,190 @@
 package remixlab.devices;
 
 import java.awt.Color;
-import java.util.Iterator;
-
 import processing.core.PApplet;
+import processing.core.PImage;
 import processing.core.PVector;
 import SimpleOpenNI.SimpleOpenNI;
 import SimpleOpenNI.XnVFlowRouter;
 import SimpleOpenNI.XnVSessionManager;
 
-public class Kinect{
-	PApplet parent;						//Processing Object
-	SimpleOpenNI context;				//Simple OpenNI Context
-	XnVSessionManager sessionManager;	//NITE Object
-	XnVFlowRouter     flowRouter;		//NITE Object
-	PointControl ctrlPoint;				//Return the points from sensor
+public class Kinect {
+	PApplet parent; 					// Processing Object
+	SimpleOpenNI context; 				// Simple OpenNI Context
+	XnVSessionManager sessionManager; 	// NITE Object
+	XnVFlowRouter flowRouter; 			// NITE Object
+	PointControl ctrlPoint; 			// Return the points from sensor
+	Hand left,right;					// Hands position
+	PVector trans;						// The vector with translation values returned by the device
+	PVector rotat;						// The vector with rotation values returned by the device
 	
-	int numHands;						//Quantity of hands
-	Hand[] hands;						//Array of hands
+	Hand[] hands;
 	
-
+	/////////////////////////////////////// CONSTRUCTORS ///////////////////////////////////////
 	/**
 	 * Kinect Constructor
-	 * @param p: PApplet parent
+	 * 
+	 * @param p
+	 *            : PApplet parent
 	 * */
 	public Kinect(PApplet p) {
 		parent = p;
 		context = new SimpleOpenNI(parent);
-		
 		// mirror is by default enabled
 		context.setMirror(true);
-		
-		// enable depthMap generation 
-		//context.enableDepth();
-		
+		// enable depthMap generation
+		context.enableDepth();
 		// enable the hands + gesture
 		context.enableGesture();
 		context.enableHands();
-		
-		// setup NITE 
-		sessionManager = context.createSessionManager("Click,Wave", "RaiseHand");
-		
-		//Instantiate the control point
+		// Setup NITE
+		sessionManager = context.createSessionManager("Click,Wave","RaiseHand");
+		// Instantiate the control point
 		ctrlPoint = new PointControl(this);
 		flowRouter = new XnVFlowRouter();
 		flowRouter.SetActive(ctrlPoint);
-		//Set the session manager
+		// Set the session manager
 		sessionManager.AddListener(flowRouter);
+		// Initialize the hands
+		left = new Hand(new Color(255, 0, 0));
+		right = new Hand(new Color(0, 255, 0));
+		//Initialize movements vectors
+		trans=new PVector(0,0,0);
+		rotat=new PVector(0,0,0);
 		
-		//Set the array of hands
-		numHands=2;
-		hands=new Hand[numHands];
-		hands[0]=new Hand(20,new Color(255,0,0));
-		hands[1]=new Hand(20,new Color(0,255,0));
 		
-		
-		
+		hands=new Hand[2];
+		hands[0]=new Hand();
+		hands[1]=new Hand();
+	}
+	
+	/////////////////////////////////////// GET AND SET ///////////////////////////////////////
+	/**
+	 * Return the depth map of the context
+	 * */
+	public int[] getDepthMap(){
+		return context.depthMap();
+	}
+	/**
+	 * Return the Image of the depth map
+	 * */
+	public PImage getDepthImage(){
+		return context.depthImage();
+	}
+	/**
+	 * Return the vector of the depth map in real world coordinates
+	 * TODO: break the update of hands
+	 * */
+	public PVector getVectorDepthMap(int index){
+		return context.depthMapRealWorld()[index];
 	}
 	/**
 	 * Return the Width provided by the context
 	 * */
-	public int width(){
+	public int width() {
 		return context.depthWidth();
 	}
 	/**
 	 * Return the Height provided by the context
 	 * */
-	public int height(){
+	public int height() {
 		return context.depthHeight();
 	}
-	
 	/**
-	 * Get the specified hand
+	 * Get the specified hand, based in the position in the x axis
 	 * */
-	public Hand getHand(int idHand){
-		return hands[idHand];
+	public Hand getHand(String hand) {
+		if (hand == "left"){
+			return left;
+		}else{
+			return right;
+		}
 	}
 	/**
 	 * Get the number of hands registered
 	 * */
-	public int getNumberHands(){
+	public int getNumberHands() {
 		return ctrlPoint.getHands();
 	}
 	/**
+	 * Return the point with World coordinates in screen (projective) coordinates
+	 * */
+	public PVector getScreen(PVector point) {
+		PVector screenPos = new PVector();
+		context.convertRealWorldToProjective(point, screenPos);
+		return screenPos;
+	}
+	
+	/////////////////////////////////////// METHODS ///////////////////////////////////////
+	/**
 	 * Update the context and the session manager
 	 * */
-	public void update(){
+	public void draw() {
 		// update the context
 		context.update();
 		// update nite
 		context.update(sessionManager);
-		// draw depthImageMap
-		//parent.image(context.depthImage(),0,0);
-		
-		
-		
-		//drawHands();
-		
+	}	
+	/**
+	 * Return the vector of screen position of the specified hand
+	 * */
+	public PVector screenHand(String hand){
+		PVector pos=new PVector(0,0,0);
+		if(getNumberHands()==2){
+			if(hand=="left"){
+				pos=getScreen(left.getPoint());
+			}else{
+				pos=getScreen(right.getPoint());
+			}
+			//Relative to the screen size
+			pos.x=(parent.width/2)-(width()/2)+pos.x;
+			pos.y=(parent.height/2)-(height()/2)+pos.y;
+		}
+		return pos;
+	}
+	/**
+	 * Return the vector of translation calculated using the position of hands
+	 * */
+	public PVector translationVector(){
+		trans=new PVector(0,0,0);
+		if(getNumberHands()==2){
+			trans.x=(left.getPoint().x+right.getPoint().x)/2;
+			trans.y=-(left.getPoint().y+right.getPoint().y)/2;
+			//TODO: Define a start position to delete the "1100" value
+			trans.z=1100-((left.getPoint().z+right.getPoint().z)/2);
+		}
+		return trans;
+	}
+	/**
+	 * Return the vector of rotations calculated using the position of hands
+	 * */
+	public PVector rotationVector(){
+		rotat=new PVector(0,0,0);
+		if(getNumberHands()==2){
+			//TODO: Define a gesture to x-rotation
+//			rotation.x=(left.getPoint().x-right.getPoint().x);
+			rotat.x=0;
+			rotat.y=-(left.getPoint().z-right.getPoint().z);
+			rotat.z=(left.getPoint().y-right.getPoint().y);
+		}
+		return rotat;
 	}
 	
+	/////////////////////////////////////// CALLBAKS ///////////////////////////////////////
 	/**
 	 * Get the callback signal when a hand is updated in the sensor
+	 * TODO: Optimize the pass of the handPoint to left/right, many steps
 	 * */
-	public void setHands(long handId,PVector handPoint){
-		//Assign the point to the hand using module
-		hands[(int) (handId%2)].addPoint(handPoint);
-	}
-	/**
-	 * Remove the list of points of a hand if it is destroyed in the context
-	 * */
-	public void deleteHand(long handId){
-		//Delete the points of the hand using module
-		hands[(int) (handId%2)].reset();
-	}
-	
-	/**
-	 * Draw the points of the set of hands
-	 * */
-	public void drawHands(){
-		for(int i=0;i<numHands;i++){
-			if(hands[i].points.size()>0){
-				parent.pushStyle();
-					parent.noFill();
-					PVector vec;
-					PVector firstVec;
-					PVector screenPos = new PVector();
-					parent.strokeWeight(2);
-					parent.stroke(hands[i].color.getRGB());
-					// draw line
-					firstVec = null;
-					Iterator<PVector> itr = hands[i].points.iterator();
-					parent.beginShape();
-						while (itr.hasNext()){
-							vec = itr.next();
-							if(firstVec == null){
-								firstVec = vec;
-							}
-							// calculate the screen position
-							context.convertRealWorldToProjective(vec,screenPos);
-							parent.vertex(screenPos.x,screenPos.y);
-						}
-					parent.endShape();
-					// draw current position of the hand
-					if(firstVec != null){
-						parent.strokeWeight(8);
-						context.convertRealWorldToProjective(firstVec,screenPos);
-						parent.point(screenPos.x,screenPos.y);
-					}
-				parent.popStyle();			
-			}
+	public void setHands(long handId, PVector handPoint) {
+		// Assign the point to the hand using module
+		hands[(int) (handId % 2)].setPoint(handPoint);
+		//PApplet.println("handPoint["+handId+"]: "+handPoint);
+		if(hands[0].getPoint().x < hands[1].getPoint().x) {
+			left = hands[0];
+			right = hands[1];
+		}else{
+			left = hands[1];
+			right = hands[0];
 		}
 	}
 }
