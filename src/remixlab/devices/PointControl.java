@@ -38,7 +38,7 @@ class PointControl extends XnVPointControl{
 	public void OnPointCreate(XnVHandPointContext cxt){
 		PApplet.println("OnPointCreate, handId: " + cxt.getNID());
 		PVector vector = new PVector(cxt.getPtPosition().getX(), cxt.getPtPosition().getY(), cxt.getPtPosition().getZ());
-		kinect.setHands(cxt.getNID(),vector);
+		kinect.setStarting(vector);
 		cantHands++;
 	}
 	public void OnPointUpdate(XnVHandPointContext cxt){

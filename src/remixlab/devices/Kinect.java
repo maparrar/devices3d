@@ -27,7 +27,7 @@ public class Kinect {
 	PVector trans;						// The vector with translation values returned by the device
 	PVector rotat;						// The vector with rotation values returned by the device
 	
-	int zinit;
+	PVector starting;					// Start position, set when two hands are detected
 	Hand[] hands;
 	
 	/////////////////////////////////////// CONSTRUCTORS ///////////////////////////////////////
@@ -37,9 +37,9 @@ public class Kinect {
 	 * @param p
 	 *            : PApplet parent
 	 * */
-	public Kinect(PApplet p,int initialZ) {
+	public Kinect(PApplet p) {
 		parent = p;
-		zinit=initialZ;
+		starting=new PVector(0,0,1200);
 		context = new SimpleOpenNI(parent);
 		// mirror is by default enabled
 		context.setMirror(true);
@@ -166,10 +166,9 @@ public class Kinect {
 	public PVector translationVector(){
 		trans=new PVector(0,0,0);
 		if(getNumberHands()==2){
-			trans.x=(left.getPoint().x+right.getPoint().x)/2;
-			trans.y=-(left.getPoint().y+right.getPoint().y)/2;
-			//TODO: Define a start position to delete the "1100" value
-			trans.z=zinit-((left.getPoint().z+right.getPoint().z)/2);
+			trans.x=((left.getPoint().x+right.getPoint().x)/2)-starting.x;
+			trans.y=(-(left.getPoint().y+right.getPoint().y)/2)+starting.y;
+			trans.z=starting.z-((left.getPoint().z+right.getPoint().z)/2);
 		}
 		return trans;
 	}
@@ -179,8 +178,7 @@ public class Kinect {
 	public PVector rotationVector(){
 		rotat=new PVector(0,0,0);
 		if(getNumberHands()==2){
-			//TODO: Define a gesture to x-rotation
-//			rotation.x=(left.getPoint().x-right.getPoint().x);
+			//TODO: Define a gesture to x-rotation rotation.x=(left.getPoint().x-right.getPoint().x);
 			rotat.x=0;
 			rotat.y=-(left.getPoint().z-right.getPoint().z);
 			rotat.z=(left.getPoint().y-right.getPoint().y);
@@ -189,6 +187,22 @@ public class Kinect {
 	}
 	
 	/////////////////////////////////////// CALLBAKS ///////////////////////////////////////
+	/**
+	 * Receive the detection of one hand, if no one is set, set the starting position
+	 * */
+	public void setStarting(PVector handPoint){
+		if(getNumberHands()==1){
+			PVector setedHand=new PVector();
+			if(left.getPoint().x!=0&&left.getPoint().y!=0&&left.getPoint().z!=0){
+				setedHand=left.getPoint();
+			}else{
+				setedHand=right.getPoint();
+			}
+			starting.x=((handPoint.x+setedHand.x)/2);
+			starting.y=((handPoint.y+setedHand.y)/2);
+			starting.z=((handPoint.z+setedHand.z)/2);
+		}
+	}
 	/**
 	 * Get the callback signal when a hand is updated in the sensor
 	 * TODO: Optimize the pass of the handPoint to left/right, many steps
@@ -204,5 +218,11 @@ public class Kinect {
 			left = hands[1];
 			right = hands[0];
 		}
+	}
+	/**
+	 * Unset the hands when once is undetected by the sensor
+	 * */
+	public void unsetHands(){
+		
 	}
 }

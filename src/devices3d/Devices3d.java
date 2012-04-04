@@ -9,20 +9,35 @@
 
 package devices3d;
 
+import java.awt.Color;
+
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PVector;
 import remixlab.devices.Kinect;
+import remixlab.devices.Marker;
 import remixlab.proscene.*;
 
 /**
- * TODO: Draw the hands in the screen TODO: Return Position from the Kinect
- * class TODO: Return Rotation from the Kinect class TODO: Define the movement
- * to rotate in x axis TODO: Build the tunnel TODO: Constrain the movement to
- * the tunnel TODO: Start the movement in the start of the tunnel TODO: Only
- * move forward TODO: Measure: - time - start point - end point - curves in the
- * bezier tunnel - deviation of the original path - collisions - stop times -
- * lost sensing hands - TODO: Calculate: - Quantitative Throughput -
+ * TODO: Draw the hands in the screen 
+ * TODO: Return Position from the Kinect class 
+ * TODO: Return Rotation from the Kinect class 
+ * TODO: Define the movement to rotate in x axis 
+ * TODO: Build the tunnel TODO: Constrain the movement to the tunnel 
+ * TODO: Start the movement in the start of the tunnel
+ * TODO: Only move forward 
+ * TODO: Measure:
+ *  - time
+ *  - start point
+ *  - end point 
+ *  - curves in the bezier tunnel 
+ *  - deviation of the original path 
+ *  - collisions 
+ *  - stop times 
+ *  - lost sensing hands - 
+ * TODO: Calculate:
+ *  - Quantitative Throughput 
+ *  -
  * */
 
 @SuppressWarnings("serial")
@@ -36,7 +51,13 @@ public class Devices3d extends PApplet {
 	PVector right; // Vector with screen position of the Right Hand returned by the device
 	PVector trans; // Vector with translation values returned by the device
 	PVector rotat; // Vector with rotation values returned by the device
-
+	
+	
+	Marker target;
+	int cantMarkers;
+	Marker[] markers;
+	
+	
 	public void setup() {
 		size(1200,800, P3D);
 		scene = new Scene(this);
@@ -52,13 +73,12 @@ public class Devices3d extends PApplet {
 		scene.setCurrentCameraProfile("THIRD_PERSON");
 
 		// Create the kinect object
-		int zinit=1500;
-		kinect = new Kinect(this,zinit);
+		kinect = new Kinect(this);
 
 		// Define the RELATIVE mode HIDevice.
 		dev = new HIDevice(scene);
 		dev.addHandler(this,"feed");
-		dev.setTranslationSensitivity(0.01f, 0.01f, 0.01f);
+		dev.setTranslationSensitivity(0.03f, 0.03f, 0.03f);
 		dev.setRotationSensitivity(0.001f, 0.0001f, 0.0001f);
 		scene.addDevice(dev);
 		
@@ -66,24 +86,46 @@ public class Devices3d extends PApplet {
 		right = new PVector(0, 0, 0);
 		trans = new PVector(0, 0, 0);
 		rotat = new PVector(0, 0, 0);
+		
+
+		
+		PVector direction=new PVector(0,0,1);
+		Quaternion orientation=new Quaternion(new PVector(0, 0, 1), direction);
+		Color color=new Color(255,0,0);
+		
+		target=new Marker(this,scene,new PVector(0,-200,0),orientation,50,color);
+		
+		
+		
+		
+		
+		
+		cantMarkers=30;
+		 
+		markers=new Marker[cantMarkers];
+		float min=-200,max=200;
+		for(int i=0;i<cantMarkers;i++){
+			PVector directionM=new PVector(random(min,max),random(min,max),random(min,max));
+			Quaternion orientationM=new Quaternion(new PVector(0, 0, 1), directionM);
+			Color colorM=new Color((int)random(255),(int)random(255),(int)random(255));
+			markers[i]=new Marker(this,scene,new PVector(random(min,max),random(min,max),random(min,max)),orientationM,10,colorM);
+		}
+		
 		smooth();
 	}
 
 	public void draw() {
 		background(0);
 		
+		target.draw();
+		for(int i=0;i<cantMarkers;i++){
+			markers[i].draw();
+		}
+		
 		// Update and draw the kinect data from the sensor
 		kinect.draw();
 
-		//Draw a cube
-		pushMatrix();
-		    pushStyle();
-		    	fill(200,100,0);
-		    	translate(10,20,10);
-		    	box(5);
-		    popStyle();
-	    popMatrix();
-		
+				
 		// Draw the translation and rotation values
 		drawMovements();
 	}
