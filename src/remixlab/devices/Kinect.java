@@ -27,6 +27,7 @@ public class Kinect {
 	PVector trans;						// The vector with translation values returned by the device
 	PVector rotat;						// The vector with rotation values returned by the device
 	
+	int zinit;
 	Hand[] hands;
 	
 	/////////////////////////////////////// CONSTRUCTORS ///////////////////////////////////////
@@ -36,13 +37,15 @@ public class Kinect {
 	 * @param p
 	 *            : PApplet parent
 	 * */
-	public Kinect(PApplet p) {
+	public Kinect(PApplet p,int initialZ) {
 		parent = p;
+		zinit=initialZ;
 		context = new SimpleOpenNI(parent);
 		// mirror is by default enabled
 		context.setMirror(true);
 		// enable depthMap generation
 		context.enableDepth();
+		context.enableRGB();
 		// enable the hands + gesture
 		context.enableGesture();
 		context.enableHands();
@@ -79,6 +82,12 @@ public class Kinect {
 	 * */
 	public PImage getDepthImage(){
 		return context.depthImage();
+	}
+	/**
+	 * Return the Image of the depth map
+	 * */
+	public PImage getRGBImage(){
+		return context.rgbImage();
 	}
 	/**
 	 * Return the vector of the depth map in real world coordinates
@@ -160,7 +169,7 @@ public class Kinect {
 			trans.x=(left.getPoint().x+right.getPoint().x)/2;
 			trans.y=-(left.getPoint().y+right.getPoint().y)/2;
 			//TODO: Define a start position to delete the "1100" value
-			trans.z=1100-((left.getPoint().z+right.getPoint().z)/2);
+			trans.z=zinit-((left.getPoint().z+right.getPoint().z)/2);
 		}
 		return trans;
 	}

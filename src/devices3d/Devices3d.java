@@ -12,7 +12,6 @@ package devices3d;
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PVector;
-import remixlab.devices.Box;
 import remixlab.devices.Kinect;
 import remixlab.proscene.*;
 
@@ -38,10 +37,8 @@ public class Devices3d extends PApplet {
 	PVector trans; // Vector with translation values returned by the device
 	PVector rotat; // Vector with rotation values returned by the device
 
-	Box[] cajas;
-
 	public void setup() {
-		size(1920,800, P3D);
+		size(1200,800, P3D);
 		scene = new Scene(this);
 		scene.registerCameraProfile(new CameraProfile(scene, "THIRD_PERSON",CameraProfile.Mode.THIRD_PERSON));
 		//Configure the avatar
@@ -55,7 +52,8 @@ public class Devices3d extends PApplet {
 		scene.setCurrentCameraProfile("THIRD_PERSON");
 
 		// Create the kinect object
-		kinect = new Kinect(this);
+		int zinit=1500;
+		kinect = new Kinect(this,zinit);
 
 		// Define the RELATIVE mode HIDevice.
 		dev = new HIDevice(scene);
@@ -148,6 +146,8 @@ public class Devices3d extends PApplet {
 				// Draw the depth image of the sensor
 				PImage depthImage=kinect.getDepthImage();
 				image(depthImage,10,0,kinect.width()/3,kinect.height()/3);
+				PImage rgbImage=kinect.getRGBImage();
+				image(rgbImage,10,kinect.height()/3,kinect.width()/3,kinect.height()/3);
 			popStyle();
 		scene.endScreenDrawing();
 	}
