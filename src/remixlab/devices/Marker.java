@@ -23,8 +23,8 @@ public class Marker {
 	public Marker(PApplet p,Scene sc,PVector pos,Quaternion orient){
 		parent = p;
 		scene = sc;
-		orientation=orient;
 		position=pos;
+		orientation=orient;
 		radius=10;
 		color=new Color((int)parent.random(255),(int)parent.random(255),(int)parent.random(255));
 		detail=20;
@@ -56,9 +56,12 @@ public class Marker {
 		parent.pushMatrix();
 			parent.pushStyle();
 				frame.applyTransformation();
-				parent.noStroke();
-				parent.fill(color.getRGB());
-				parent.ellipse(0,0,10,10);
+//				parent.noStroke();
+//				parent.fill(color.getRGB());
+//				parent.ellipse(0,0,10,10);
+				parent.stroke(color.getRGB());
+				parent.noFill();
+				parent.sphere(10);
 			parent.popStyle();
 		parent.popMatrix();
 	}

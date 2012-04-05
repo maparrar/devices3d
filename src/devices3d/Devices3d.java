@@ -10,20 +10,15 @@
 package devices3d;
 
 import java.awt.Color;
-
 import processing.core.PApplet;
-import processing.core.PImage;
 import processing.core.PVector;
-import remixlab.devices.Kinect;
-import remixlab.devices.Marker;
+import remixlab.devices.*;
 import remixlab.proscene.*;
 
 /**
- * TODO: Draw the hands in the screen 
- * TODO: Return Position from the Kinect class 
- * TODO: Return Rotation from the Kinect class 
  * TODO: Define the movement to rotate in x axis 
- * TODO: Build the tunnel TODO: Constrain the movement to the tunnel 
+ * TODO: Build the tunnel 
+ * TODO: Constrain the movement to the tunnel 
  * TODO: Start the movement in the start of the tunnel
  * TODO: Only move forward 
  * TODO: Measure:
@@ -38,70 +33,69 @@ import remixlab.proscene.*;
  * TODO: Calculate:
  *  - Quantitative Throughput 
  *  -
+ * TODO:
+ *  - Compare Kinect aerial view
+ *  - Mouse and keyboard interaction
+ *  - Wiimote interaction
+ *  - SpaceNavigator integration
  * */
 
 @SuppressWarnings("serial")
 public class Devices3d extends PApplet {
-	Kinect kinect; // Kinect device class
-	Scene scene; // 3D Scene
-	HIDevice dev; // Object to control the scene with the device
-	InteractiveAvatarFrame avatar; // Sight of the camera. Avatar used to control the camera
+	//Enum of devices
+	public enum Device {KINECT,WIIMOTE,MOUSE,SPACENAVIGATOR}
 	
-	PVector left; // Vector with screen position of the Left Hand returned by the device
-	PVector right; // Vector with screen position of the Right Hand returned by the device
-	PVector trans; // Vector with translation values returned by the device
-	PVector rotat; // Vector with rotation values returned by the device
+	Kinect kinect; 	// Kinect device class
+	Wiimote wiimote;// Wiimote device class
+	Scene scene; 	// 3D Scene
+	Avatar avatar; 	// Sight of the camera. Avatar is used to control the camera
+	Device device;	// Current Device 
 	
+	PVector left; 	// Vector with screen position of the Left Hand returned by the device
+	PVector right; 	// Vector with screen position of the Right Hand returned by the device
+	PVector trans; 	// Vector with translation values returned by the device
+	PVector rotat; 	// Vector with rotation values returned by the device
 	
 	Marker target;
 	int cantMarkers;
 	Marker[] markers;
 	
-	
 	public void setup() {
-		size(1200,800, P3D);
+		size(1910,800, P3D);
 		scene = new Scene(this);
-		scene.registerCameraProfile(new CameraProfile(scene, "THIRD_PERSON",CameraProfile.Mode.THIRD_PERSON));
+		
+		//Initialize the vectors
+		left=right=trans=rotat= new PVector(0, 0, 0);
+		
 		//Configure the avatar
-		avatar = new InteractiveAvatarFrame(scene);
-		avatar.setPosition(50, 100, 10);
-		avatar.setOrientation(new Quaternion(new PVector(0, 0, 1), new PVector(0,10,0)));
-		avatar.setInclination(0);
-		// Add the avatar to the scene
-		scene.setInteractiveFrame(avatar);
-		// Set the camera profile
-		scene.setCurrentCameraProfile("THIRD_PERSON");
-
-		// Create the kinect object
-		kinect = new Kinect(this);
-
-		// Define the RELATIVE mode HIDevice.
-		dev = new HIDevice(scene);
-		dev.addHandler(this,"feed");
-		dev.setTranslationSensitivity(0.03f, 0.03f, 0.03f);
-		dev.setRotationSensitivity(0.001f, 0.0001f, 0.0001f);
-		scene.addDevice(dev);
+		avatar=new Avatar(this,scene,new PVector(50,100,10),new Quaternion(new PVector(0, 0, 1), new PVector(0,10,0)));
 		
-		left = new PVector(0, 0, 0);
-		right = new PVector(0, 0, 0);
-		trans = new PVector(0, 0, 0);
-		rotat = new PVector(0, 0, 0);
-		
+		//Define the current device
+		device=Device.KINECT;
+		switch (device){
+			case KINECT:
+				kinect = new Kinect(this,scene);
+				scene.addDevice(kinect.getDevice());
+				scene.disableMouseHandling();
+				break;
+			case WIIMOTE:
+				wiimote=new Wiimote(this,scene);
+				scene.addDevice(wiimote.getDevice());
+				scene.disableMouseHandling();
+				avatar.drawHands(false);
+				break;
+			default : 
+				println("device: "+device);
+		}
+				
 
-		
+		//Create the markers and the target
 		PVector direction=new PVector(0,0,1);
 		Quaternion orientation=new Quaternion(new PVector(0, 0, 1), direction);
 		Color color=new Color(255,0,0);
-		
 		target=new Marker(this,scene,new PVector(0,-200,0),orientation,50,color);
 		
-		
-		
-		
-		
-		
-		cantMarkers=30;
-		 
+		cantMarkers=10;
 		markers=new Marker[cantMarkers];
 		float min=-200,max=200;
 		for(int i=0;i<cantMarkers;i++){
@@ -110,88 +104,48 @@ public class Devices3d extends PApplet {
 			Color colorM=new Color((int)random(255),(int)random(255),(int)random(255));
 			markers[i]=new Marker(this,scene,new PVector(random(min,max),random(min,max),random(min,max)),orientationM,10,colorM);
 		}
-		
 		smooth();
 	}
 
 	public void draw() {
 		background(0);
-		
+		//Draw the markers and the target
 		target.draw();
 		for(int i=0;i<cantMarkers;i++){
 			markers[i].draw();
 		}
-		
-		// Update and draw the kinect data from the sensor
-		kinect.draw();
-
+		//Execute the draw an load data from the device selected
+		switch (device){
+			case KINECT:
+				kinect.draw();
+				loadKinectData();
+				break;
+			case WIIMOTE:
+				wiimote.draw();
+				loadWiimoteData();
+				break;
+			default : 
 				
-		// Draw the translation and rotation values
-		drawMovements();
+		}
+		// Draw the graphics elements of the Avatar
+		avatar.draw(trans,rotat,left,right);
 	}
-
+	
+	/////////////////////////////////////// LOADERS ///////////////////////////////////////
 	/**
-	 * Feed the translations and rotations to the scene, gives the hand positions
+	 * Load the Kinect data to display in the avatar
 	 * */
-	public void feed(HIDevice d) {
+	public void loadKinectData(){
 		left = kinect.screenHand("left");
 		right = kinect.screenHand("right");
 		trans = kinect.translationVector();
 		rotat = kinect.rotationVector();
-		d.feedTranslation(trans.x, trans.y, trans.z);
-		d.feedRotation(rotat.x, rotat.y, rotat.z);
 	}
-	
 	/**
-	 * Draw the translation and rotation vectors in the screen
+	 * Load the Wiimote data to display in the avatar
 	 * */
-	public void drawMovements() {
-		float alpha=80;
-		scene.beginScreenDrawing();
-			pushStyle();
-				noFill();
-				strokeWeight(4);
-		
-				// X
-				stroke(255, 0, 0);
-				line(width / 2, height - 2, (width / 2) + trans.x, height - 2);
-				stroke(255, 70, 70);
-				line(width / 2, height - 6, (width / 2) + rotat.x, height - 6);
-		
-				// Y
-				stroke(0, 255, 0);
-				line(2, (height / 2), 2, (height / 2) + trans.y);
-				stroke(70, 255, 70);
-				line(6, (height / 2), 6, (height / 2) + rotat.y);
-		
-				// Z
-				stroke(0, 0, 255);
-				line(width - 2, (height / 2), width - 2, (height / 2) - trans.z);
-				stroke(70, 70, 255);
-				line(width - 6, (height / 2), width - 6, (height / 2) + rotat.z);
-				
-				//Hands position
-				stroke(100, 255, 0, alpha);
-				point(left.x, left.y);
-				point(right.x, right.y);
-				
-				// Draw the sight
-				float halfWidth=width/2;
-				float halfHeight=height/2;
-				noFill();
-				strokeWeight(2);
-				stroke(100, 255, 0, alpha);
-				ellipse(halfWidth,halfHeight,30,30);
-				line(halfWidth-25,halfHeight,halfWidth+25,halfHeight);
-				line(halfWidth,halfHeight-25,halfWidth,halfHeight+25);
-				
-				// Draw the depth image of the sensor
-				PImage depthImage=kinect.getDepthImage();
-				image(depthImage,10,0,kinect.width()/3,kinect.height()/3);
-				PImage rgbImage=kinect.getRGBImage();
-				image(rgbImage,10,kinect.height()/3,kinect.width()/3,kinect.height()/3);
-			popStyle();
-		scene.endScreenDrawing();
+	public void loadWiimoteData(){
+		trans = wiimote.translationVector();
+		rotat = wiimote.rotationVector();
 	}
-
 }

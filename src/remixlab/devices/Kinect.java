@@ -13,12 +13,16 @@ import java.awt.Color;
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PVector;
+import remixlab.proscene.HIDevice;
+import remixlab.proscene.Scene;
 import SimpleOpenNI.SimpleOpenNI;
 import SimpleOpenNI.XnVFlowRouter;
 import SimpleOpenNI.XnVSessionManager;
 
 public class Kinect {
 	PApplet parent; 					// Processing Object
+	Scene scene;						// Scene proscene 
+	HIDevice device; 					// Object to control the scene with the device
 	SimpleOpenNI context; 				// Simple OpenNI Context
 	XnVSessionManager sessionManager; 	// NITE Object
 	XnVFlowRouter flowRouter; 			// NITE Object
@@ -26,19 +30,17 @@ public class Kinect {
 	Hand left,right;					// Hands position
 	PVector trans;						// The vector with translation values returned by the device
 	PVector rotat;						// The vector with rotation values returned by the device
-	
 	PVector starting;					// Start position, set when two hands are detected
 	Hand[] hands;
 	
 	/////////////////////////////////////// CONSTRUCTORS ///////////////////////////////////////
 	/**
-	 * Kinect Constructor
-	 * 
-	 * @param p
-	 *            : PApplet parent
+	 * Kinect Constructor 
+	 * @param p: PApplet parent
 	 * */
-	public Kinect(PApplet p) {
+	public Kinect(PApplet p,Scene s) {
 		parent = p;
+		scene=s;
 		starting=new PVector(0,0,1200);
 		context = new SimpleOpenNI(parent);
 		// mirror is by default enabled
@@ -57,14 +59,20 @@ public class Kinect {
 		flowRouter.SetActive(ctrlPoint);
 		// Set the session manager
 		sessionManager.AddListener(flowRouter);
+		
+		//Initialize the device to send data
+		device = new HIDevice(scene);
+		device.addHandler(this,"feed");
+		device.setTranslationSensitivity(0.03f, 0.03f, 0.03f);
+		device.setRotationSensitivity(0.0001f, 0.0001f, 0.0001f);
+		
 		// Initialize the hands
 		left = new Hand(new Color(255, 0, 0));
 		right = new Hand(new Color(0, 255, 0));
 		//Initialize movements vectors
-		trans=new PVector(0,0,0);
-		rotat=new PVector(0,0,0);
+		trans=rotat=new PVector(0,0,0);
 		
-		
+		//Auxiliary array to define left and hand
 		hands=new Hand[2];
 		hands[0]=new Hand();
 		hands[1]=new Hand();
@@ -142,7 +150,22 @@ public class Kinect {
 		context.update();
 		// update nite
 		context.update(sessionManager);
-	}	
+	}
+	/**
+	 * Return the Kinect as the input device
+	 * */
+	public HIDevice getDevice(){
+		return device;
+	}
+	/**
+	 * Feed the translations and rotations to the scene, gives the hand positions
+	 * */
+	public void feed(HIDevice d) {
+		PVector transV = translationVector();
+		PVector rotatV = rotationVector();
+		d.feedTranslation(transV.x, transV.y, transV.z);
+		d.feedRotation(rotatV.x, rotatV.y, rotatV.z);
+	}
 	/**
 	 * Return the vector of screen position of the specified hand
 	 * */
@@ -218,11 +241,5 @@ public class Kinect {
 			left = hands[1];
 			right = hands[0];
 		}
-	}
-	/**
-	 * Unset the hands when once is undetected by the sensor
-	 * */
-	public void unsetHands(){
-		
 	}
 }

@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="lib" path="lib/base/opengl/opengl.jar" sourcepath="/home/alejo/tesis2/processing/processing-1.5.1/modes/java/libraries/opengl/src">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="devices3d/lib/base/opengl"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/base/opengl/gluegen-rt.jar" sourcepath="/home/alejo/tesis2/processing/processing-1.5.1/modes/java/libraries/opengl/src">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="devices3d/lib/base/opengl"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/base/opengl/jogl.jar" sourcepath="/home/alejo/tesis2/processing/processing-1.5.1/modes/java/libraries/opengl/src">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="devices3d/lib/base/opengl"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="lib/base/core/ant.jar">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="devices3d/lib/base/core"/>
@@ -13,6 +28,11 @@
 	<classpathentry kind="lib" path="lib/base/core/core.jar">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="devices3d/lib/base/core"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/user/procontroll/procontroll.jar" sourcepath="/home/alejo/tesis2/sketches/libraries/procontroll/src">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="devices3d/lib/user/procontroll"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/user/SimpleOpenNI/SimpleOpenNI.jar">
