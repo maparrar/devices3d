@@ -47,6 +47,7 @@ public class Devices3d extends PApplet {
 	
 	Kinect kinect; 	// Kinect device class
 	Wiimote wiimote;// Wiimote device class
+	SpaceNavigator space;// SpaceNavigator device class
 	Scene scene; 	// 3D Scene
 	Avatar avatar; 	// Sight of the camera. Avatar is used to control the camera
 	Device device;	// Current Device 
@@ -71,7 +72,7 @@ public class Devices3d extends PApplet {
 		avatar=new Avatar(this,scene,new PVector(50,100,10),new Quaternion(new PVector(0, 0, 1), new PVector(0,10,0)));
 		
 		//Define the current device
-		device=Device.KINECT;
+		device=Device.SPACENAVIGATOR;
 		switch (device){
 			case KINECT:
 				kinect = new Kinect(this,scene);
@@ -81,6 +82,12 @@ public class Devices3d extends PApplet {
 			case WIIMOTE:
 				wiimote=new Wiimote(this,scene);
 				scene.addDevice(wiimote.getDevice());
+				scene.disableMouseHandling();
+				avatar.drawHands(false);
+				break;
+			case SPACENAVIGATOR:
+				space=new SpaceNavigator(this,scene);
+				scene.addDevice(space.getDevice());
 				scene.disableMouseHandling();
 				avatar.drawHands(false);
 				break;
@@ -124,6 +131,8 @@ public class Devices3d extends PApplet {
 				wiimote.draw();
 				loadWiimoteData();
 				break;
+			case SPACENAVIGATOR:
+				loadSpaceData();
 			default : 
 				
 		}
@@ -147,5 +156,12 @@ public class Devices3d extends PApplet {
 	public void loadWiimoteData(){
 		trans = wiimote.translationVector();
 		rotat = wiimote.rotationVector();
+	}
+	/**
+	 * Load the SpaceNavigator data to display in the avatar
+	 * */
+	public void loadSpaceData(){
+		trans = space.translationVector();
+		rotat = space.rotationVector();
 	}
 }

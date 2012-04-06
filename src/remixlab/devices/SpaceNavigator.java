@@ -4,12 +4,9 @@
  * @author Miguel Alejandro Parra Romero [maparrar@unal.edu.co]
  * @author Jean Pierre Charalambos [jpcharalambosh@unal.edu.co]
  * 
- * Wiimote Class, this class manage the Wii control interaction
+ * SpaceNavigator Class, this class manage the SpaceNavigator control interaction
  * */
 package remixlab.devices;
-
-import java.awt.AWTException;
-import java.awt.Robot;
 
 import processing.core.PApplet;
 import processing.core.PVector;
@@ -17,62 +14,56 @@ import procontroll.*;
 import remixlab.proscene.HIDevice;
 import remixlab.proscene.Scene;
 
-public class Wiimote{
+public class SpaceNavigator{
 	PApplet parent; 				// Processing Object
 	Scene scene;					// Scene proscene 
 	HIDevice device; 				// Object to control the scene with the device
 	PVector trans;					// The vector with translation values returned by the device
 	PVector rotat;					// The vector with rotation values returned by the device
 	
-	//Wii variables
+	//SpaceNavigator variables
 	ControllIO controllIO;
-	ControllDevice wii;				// Wiimote procontroll object
-	ControllSlider acc;				// Accelerometer stick ()
-	ControllStick pad;				// Pad stick (translation x and z axis)
-	ControllStick ir;				// IR slider (rotation x and y axis)
-	ControllButton aButton;			// Up/A button (translation along positive y)
-	ControllButton bButton;			// Down/B button (translation along negative y)
-	
-	Robot robot;					//Object to block the mouse pointer
+	ControllDevice space;			// SpaceNavigator procontroll object	
+	ControllSlider slider0;			// Slider 0 (Translation x)
+	ControllSlider slider1;			// Slider 1 (Translation z)
+	ControllSlider slider2;			// Slider 2 (Translation y)
+	ControllSlider slider3;			// Slider 3 (Rotation x)
+	ControllSlider slider4;			// Slider 4 (Rotation z)
+	ControllSlider slider5;			// Slider 5 (Rotation y)
+	ControllButton button0;			// button (Not used)
+	ControllButton button1;			// button (Not used)
 	
 	/////////////////////////////////////// CONSTRUCTORS ///////////////////////////////////////
 	/**
-	 * Wiimote Constructor 
+	 * SpaceNavigator Constructor 
 	 * @param p: PApplet parent
 	 * */
-	public Wiimote(PApplet p,Scene s) {
+	public SpaceNavigator(PApplet p,Scene s) {
 		parent = p;
 		scene=s;
-		
 		//Initialize the device to send data
 		device = new HIDevice(scene);
 		device.addHandler(this,"feed");
 		device.setTranslationSensitivity(0.003f, 0.003f, 0.002f);
 		device.setRotationSensitivity(0.00005f, 0.00005f, 0.00005f);
-		
 		//Initialize the controls of the device
 		controllIO = ControllIO.getInstance(parent);
-		wii = controllIO.getDevice("Nintendo Wiimote");
-		//Load sticks
-		acc = wii.getSlider(0);
-		acc.setMultiplier(PApplet.PI);
-		pad = wii.getStick(1);
+		space = controllIO.getDevice("3Dconnexion SpaceNavigator");
+		//Load sliders
+		slider0 = space.getSlider(0);
+		slider1 = space.getSlider(1);
+		slider2 = space.getSlider(2);
+		slider3 = space.getSlider(3);
+		slider4 = space.getSlider(4);
+		slider5 = space.getSlider(5);
 		//Load buttons
-		aButton=wii.getButton(0);
-		bButton=wii.getButton(1);
-		//Load Sliders
-		ir=wii.getStick(0);
-		
+		button0=space.getButton(0);
+		button1=space.getButton(1);
 		//Initialize movements vectors
 		trans=rotat=new PVector(0,0,0);
-		
-		//Defined by control the mouse pointer
-		try {
-			robot=new Robot();
-		} catch (AWTException e) {}
+		//Defined to hide the mouse pointer
 		parent.noCursor();
 	}
-	
 	/////////////////////////////////////// GET AND SET ///////////////////////////////////////
 	/**
 	 * Return the Wiimote as the input device
@@ -85,11 +76,7 @@ public class Wiimote{
 	 * 
 	 * */
 	public void draw() {
-		//Lock the mouse pointer
-//		robot.mouseMove(parent.width/2,parent.height/2);
-		
-		PApplet.println("ACC: "+acc.getValue()+" :: IR: "+ir.getX()+","+ir.getY());
-	}	
+	}
 	/**
 	 * Feed the translations and rotations to the scene, gives the hand positions
 	 * */
@@ -103,25 +90,22 @@ public class Wiimote{
 	 * Return the vector of translation
 	 * */
 	public PVector translationVector(){
+		float multip=500;
 		trans=new PVector(0,0,0);
-		trans.x=pad.getY()*500;
-		trans.y=-pad.getX()*500;
-		if(bButton.pressed())
-			trans.z=bButton.getValue()*62;
-		if(aButton.pressed())
-			trans.z=-aButton.getValue()*62;
+		trans.x=slider0.getValue()*multip;
+		trans.y=slider2.getValue()*multip;
+		trans.z=-slider1.getValue()*multip;
 		return trans;
 	}
 	/**
 	 * Return the vector of rotations
 	 * */
 	public PVector rotationVector(){
-		float multip=160;
+		float multip=500;
 		rotat=new PVector(0,0,0);
-//		//TODO: Define a control to y-rotation
-		rotat.x=-ir.getX()*multip;
-		rotat.y=ir.getY()*multip;
-		rotat.z=0;
+		rotat.x=slider3.getValue()*multip;
+		rotat.y=slider5.getValue()*multip;
+		rotat.z=-slider4.getValue()*multip;
 		return rotat;
 	}
 }
