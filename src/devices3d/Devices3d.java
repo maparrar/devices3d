@@ -72,7 +72,7 @@ public class Devices3d extends PApplet {
 		avatar=new Avatar(this,scene,new PVector(50,100,10),new Quaternion(new PVector(0, 0, 1), new PVector(0,10,0)));
 		
 		//Define the current device
-		device=Device.SPACENAVIGATOR;
+		device=Device.KINECT;
 		switch (device){
 			case KINECT:
 				kinect = new Kinect(this,scene);

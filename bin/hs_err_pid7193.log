@@ -1,0 +1,650 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGSEGV (0xb) at pc=0x7a8d8d5a, pid=7193, tid=2058021744
+#
+# JRE version: 6.0_26-b03
+# Java VM: Java HotSpot(TM) Server VM (20.1-b02 mixed mode linux-x86 )
+# Problematic frame:
+# C  [libOpenNI.so+0x33d5a]  long long+0x1a
+#
+# If you would like to submit a bug report, please visit:
+#   http://java.sun.com/webapps/bugreport/crash.jsp
+# The crash happened outside the Java Virtual Machine in native code.
+# See problematic frame for where to report the bug.
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x09663400):  JavaThread "Animation Thread" [_thread_in_native, id=7219, stack(0x7aa5e000,0x7aaaf000)]
+
+siginfo:si_signo=SIGSEGV: si_errno=0, si_code=1 (SEGV_MAPERR), si_addr=0x00000000
+
+Registers:
+EAX=0x00000000, EBX=0x7a922ff4, ECX=0x00000001, EDX=0x7ab1db70
+ESP=0x7aaadb40, EBP=0x7aaadb68, ESI=0x00000000, EDI=0x09663400
+EIP=0x7a8d8d5a, EFLAGS=0x00010202, CR2=0x00000000
+
+Top of Stack: (sp=0x7aaadb40)
+0x7aaadb40:   7a8a7dec 7aa09ff4 7cbd6640 09663400
+0x7aaadb50:   7aaadb88 b7784c30 7ab1db70 7a8d8d40
+0x7aaadb60:   7aa09ff4 7cbd6640 7aaadb88 7a9bf98c
+0x7aaadb70:   00000000 7ab1db70 7ab1db70 7a9bf966
+0x7aaadb80:   7ab1db00 7aa09ff4 7aaadbb8 7a9c66f1
+0x7aaadb90:   7ab1db00 7ab1db70 00000000 00000000
+0x7aaadba0:   7aaadbd8 b7784c30 09663400 7a9c6601
+0x7aaadbb0:   7aa09ff4 7cbd6640 7aaadbd8 7a9c6825 
+
+Instructions: (pc=0x7a8d8d5a)
+0x7a8d8d3a:   bc 27 00 00 00 00 55 89 e5 83 ec 28 89 75 fc 8b
+0x7a8d8d4a:   75 08 89 5d f8 e8 13 a8 fd ff 81 c3 a0 a2 04 00
+0x7a8d8d5a:   8b 06 8b 50 08 85 d2 74 0c 8b 40 04 8b 00 a9 00
+0x7a8d8d6a:   00 01 00 75 11 8b 5d f8 b8 12 00 01 00 8b 75 fc 
+
+Register to memory mapping:
+
+EAX=0x00000000 is an unknown value
+EBX=0x7a922ff4: <offset 0x7dff4> in /usr/lib/libOpenNI.so at 0x7a8a5000
+ECX=0x00000001 is an unknown value
+EDX=0x7ab1db70 is an unknown value
+ESP=0x7aaadb40 is pointing into the stack for thread: 0x09663400
+EBP=0x7aaadb68 is pointing into the stack for thread: 0x09663400
+ESI=0x00000000 is an unknown value
+EDI=0x09663400 is a thread
+
+
+Stack: [0x7aa5e000,0x7aaaf000],  sp=0x7aaadb40,  free space=318k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+C  [libOpenNI.so+0x33d5a]  long long+0x1a
+C  [libSimpleOpenNI.so+0x9a98c]  xn::MapGenerator::SetMapOutputMode(XnMapOutputMode const&)+0x26
+C  [libSimpleOpenNI.so+0xa16f1]  sOpenNI::ContextWrapper::createDepth(bool)+0xdb
+C  [libSimpleOpenNI.so+0xa1825]  sOpenNI::ContextWrapper::enableDepth()+0x6b
+C  [libSimpleOpenNI.so+0x848c6]  Java_SimpleOpenNI_SimpleOpenNIJNI_ContextWrapper_1enableDepthSwigExplicitContextWrapper_1_1SWIG_10+0x3c
+j  SimpleOpenNI.SimpleOpenNIJNI.ContextWrapper_enableDepthSwigExplicitContextWrapper__SWIG_0(JLSimpleOpenNI/ContextWrapper;)Z+0
+j  SimpleOpenNI.ContextWrapper.enableDepth()Z+26
+j  SimpleOpenNI.SimpleOpenNI.enableDepth()Z+1
+j  remixlab.devices.Kinect.<init>(Lprocessing/core/PApplet;Lremixlab/proscene/Scene;)V+56
+j  devices3d.Devices3d.setup()V+242
+j  processing.core.PApplet.handleDraw()V+65
+j  processing.core.PApplet.run()V+72
+j  java.lang.Thread.run()V+11
+v  ~StubRoutines::call_stub
+V  [libjvm.so+0x3dff01]  JavaCalls::call_helper(JavaValue*, methodHandle*, JavaCallArguments*, Thread*)+0x1c1
+V  [libjvm.so+0x5e1298]  os::os_exception_wrapper(void (*)(JavaValue*, methodHandle*, JavaCallArguments*, Thread*), JavaValue*, methodHandle*, JavaCallArguments*, Thread*)+0x18
+V  [libjvm.so+0x3df775]  JavaCalls::call_virtual(JavaValue*, KlassHandle, symbolHandle, symbolHandle, JavaCallArguments*, Thread*)+0xc5
+V  [libjvm.so+0x3df838]  JavaCalls::call_virtual(JavaValue*, Handle, KlassHandle, symbolHandle, symbolHandle, Thread*)+0x58
+V  [libjvm.so+0x4642d7]  thread_entry(JavaThread*, Thread*)+0xa7
+V  [libjvm.so+0x6e16bf]  JavaThread::run()+0x11f
+V  [libjvm.so+0x5e2aee]  java_start(Thread*)+0x14e
+C  [libpthread.so.0+0x6d31]  short+0xd1
+
+Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)
+j  SimpleOpenNI.SimpleOpenNIJNI.ContextWrapper_enableDepthSwigExplicitContextWrapper__SWIG_0(JLSimpleOpenNI/ContextWrapper;)Z+0
+j  SimpleOpenNI.ContextWrapper.enableDepth()Z+26
+j  SimpleOpenNI.SimpleOpenNI.enableDepth()Z+1
+j  remixlab.devices.Kinect.<init>(Lprocessing/core/PApplet;Lremixlab/proscene/Scene;)V+56
+j  devices3d.Devices3d.setup()V+242
+j  processing.core.PApplet.handleDraw()V+65
+j  processing.core.PApplet.run()V+72
+j  java.lang.Thread.run()V+11
+v  ~StubRoutines::call_stub
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+=>0x09663400 JavaThread "Animation Thread" [_thread_in_native, id=7219, stack(0x7aa5e000,0x7aaaf000)]
+  0x0967ac00 JavaThread "AWT-EventQueue-1" [_thread_blocked, id=7218, stack(0x7aaaf000,0x7ab00000)]
+  0x094efc00 JavaThread "DestroyJavaVM" [_thread_blocked, id=7198, stack(0xb690c000,0xb695d000)]
+  0x7af9d400 JavaThread "AWT-EventQueue-0" [_thread_blocked, id=7216, stack(0x7ac0d000,0x7ac5e000)]
+  0x7af9c000 JavaThread "AWT-Shutdown" [_thread_blocked, id=7215, stack(0x7ac5e000,0x7acaf000)]
+  0x7af96800 JavaThread "thread applet-devices3d.Devices3d.class" [_thread_blocked, id=7214, stack(0x7acaf000,0x7ad00000)]
+  0x09699c00 JavaThread "AWT-XAWT" daemon [_thread_in_native, id=7212, stack(0x7aeaf000,0x7af00000)]
+  0x7b4bec00 JavaThread "Java2D Disposer" daemon [_thread_blocked, id=7211, stack(0x7b0c5000,0x7b116000)]
+  0x7bdab000 JavaThread "Low Memory Detector" daemon [_thread_blocked, id=7209, stack(0x7b5b0000,0x7b601000)]
+  0x7bda9400 JavaThread "C2 CompilerThread1" daemon [_thread_blocked, id=7208, stack(0x7b601000,0x7b682000)]
+  0x7bda7000 JavaThread "C2 CompilerThread0" daemon [_thread_blocked, id=7207, stack(0x7b682000,0x7b703000)]
+  0x7bda5800 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=7206, stack(0x7b703000,0x7b754000)]
+  0x7bd97800 JavaThread "Finalizer" daemon [_thread_blocked, id=7205, stack(0x7bac6000,0x7bb17000)]
+  0x7bd96000 JavaThread "Reference Handler" daemon [_thread_blocked, id=7204, stack(0x7bb17000,0x7bb68000)]
+
+Other Threads:
+  0x7bd92400 VMThread [stack: 0x7be2a000,0x7beab000] [id=7203]
+  0x7bdb5000 WatcherThread [stack: 0x7b52f000,0x7b5b0000] [id=7210]
+
+VM state:not at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+Heap
+ PSYoungGen      total 15296K, used 10167K [0xa2680000, 0xa4460000, 0xb37d0000)
+  eden space 13120K, 65% used [0xa2680000,0xa2ed7700,0xa3350000)
+  from space 2176K, 74% used [0xa3350000,0xa34e66a8,0xa3570000)
+  to   space 2176K, 0% used [0xa4240000,0xa4240000,0xa4460000)
+ PSOldGen        total 35008K, used 5968K [0x803d0000, 0x82600000, 0xa2680000)
+  object space 35008K, 17% used [0x803d0000,0x809a4310,0x82600000)
+ PSPermGen       total 16384K, used 8336K [0x7c3d0000, 0x7d3d0000, 0x803d0000)
+  object space 16384K, 50% used [0x7c3d0000,0x7cbf4338,0x7d3d0000)
+
+Code Cache  [0xb3890000, 0xb3ad0000, 0xb6890000)
+ total_blobs=329 nmethods=40 adapters=244 free_code_cache=49887232 largest_free_block=11776
+
+Dynamic libraries:
+08048000-08052000 r-xp 00000000 08:08 1181081    /usr/lib/jvm/java-6-sun-1.6.0.26/jre/bin/java
+08052000-08053000 rwxp 00009000 08:08 1181081    /usr/lib/jvm/java-6-sun-1.6.0.26/jre/bin/java
+094e9000-097ae000 rwxp 00000000 00:00 0          [heap]
+791d1000-7925a000 r-xp 00000000 08:08 1070238    /usr/lib/libXnDeviceSensorV2KM.so
+7925a000-79263000 r-xp 00088000 08:08 1070238    /usr/lib/libXnDeviceSensorV2KM.so
+79263000-79264000 rwxp 00091000 08:08 1070238    /usr/lib/libXnDeviceSensorV2KM.so
+79264000-79344000 r-xp 00000000 08:08 1064091    /usr/lib/libXnVHandGenerator_1_5_0.so
+79344000-79347000 r-xp 000df000 08:08 1064091    /usr/lib/libXnVHandGenerator_1_5_0.so
+79347000-79348000 rwxp 000e2000 08:08 1064091    /usr/lib/libXnVHandGenerator_1_5_0.so
+79348000-79354000 rwxp 00000000 00:00 0 
+79354000-79747000 r-xp 00000000 08:08 1064087    /usr/lib/libXnVFeatures_1_5_0.so
+79747000-79748000 ---p 003f3000 08:08 1064087    /usr/lib/libXnVFeatures_1_5_0.so
+79748000-79750000 r-xp 003f3000 08:08 1064087    /usr/lib/libXnVFeatures_1_5_0.so
+79750000-79751000 rwxp 003fb000 08:08 1064087    /usr/lib/libXnVFeatures_1_5_0.so
+79751000-79765000 rwxp 00000000 00:00 0 
+79765000-797b7000 r-xp 00000000 08:08 1064002    /usr/lib/libXnDDK.so
+797b7000-797b9000 r-xp 00051000 08:08 1064002    /usr/lib/libXnDDK.so
+797b9000-797ba000 rwxp 00053000 08:08 1064002    /usr/lib/libXnDDK.so
+797ba000-797de000 r-xp 00000000 08:08 1064005    /usr/lib/libXnFormats.so
+797de000-797df000 r-xp 00023000 08:08 1064005    /usr/lib/libXnFormats.so
+797df000-797e0000 rwxp 00024000 08:08 1064005    /usr/lib/libXnFormats.so
+797e0000-79800000 rwxp 00000000 00:00 0 
+79800000-79899000 r-xp 00000000 08:08 1064004    /usr/lib/libXnDeviceSensorV2.so
+79899000-798a2000 r-xp 00098000 08:08 1064004    /usr/lib/libXnDeviceSensorV2.so
+798a2000-798a3000 rwxp 000a1000 08:08 1064004    /usr/lib/libXnDeviceSensorV2.so
+798a3000-79986000 r-xp 00000000 08:08 1064000    /usr/lib/libXnVHandGenerator_1_5_2.so
+79986000-79989000 r-xp 000e3000 08:08 1064000    /usr/lib/libXnVHandGenerator_1_5_2.so
+79989000-7998a000 rwxp 000e6000 08:08 1064000    /usr/lib/libXnVHandGenerator_1_5_2.so
+7998a000-79996000 rwxp 00000000 00:00 0 
+79996000-79a6b000 r-xp 00000000 08:08 1063997    /usr/lib/libXnVHandGenerator_1_4_2.so
+79a6b000-79a6c000 ---p 000d5000 08:08 1063997    /usr/lib/libXnVHandGenerator_1_4_2.so
+79a6c000-79a6e000 r-xp 000d5000 08:08 1063997    /usr/lib/libXnVHandGenerator_1_4_2.so
+79a6e000-79a6f000 rwxp 000d7000 08:08 1063997    /usr/lib/libXnVHandGenerator_1_4_2.so
+79a6f000-79a71000 rwxp 00000000 00:00 0 
+79a71000-79b45000 r-xp 00000000 08:08 1063994    /usr/lib/libXnVHandGenerator_1_4_1.so
+79b45000-79b46000 ---p 000d4000 08:08 1063994    /usr/lib/libXnVHandGenerator_1_4_1.so
+79b46000-79b48000 r-xp 000d4000 08:08 1063994    /usr/lib/libXnVHandGenerator_1_4_1.so
+79b48000-79b49000 rwxp 000d6000 08:08 1063994    /usr/lib/libXnVHandGenerator_1_4_1.so
+79b49000-79b4b000 rwxp 00000000 00:00 0 
+79b4b000-79c29000 r-xp 00000000 08:08 1063991    /usr/lib/libXnVHandGenerator_1_3_1.so
+79c29000-79c2c000 r-xp 000dd000 08:08 1063991    /usr/lib/libXnVHandGenerator_1_3_1.so
+79c2c000-79c2d000 rwxp 000e0000 08:08 1063991    /usr/lib/libXnVHandGenerator_1_3_1.so
+79c2d000-79c2f000 rwxp 00000000 00:00 0 
+79c2f000-7a030000 r-xp 00000000 08:08 1063984    /usr/lib/libXnVFeatures_1_5_2.so
+7a030000-7a031000 ---p 00401000 08:08 1063984    /usr/lib/libXnVFeatures_1_5_2.so
+7a031000-7a039000 r-xp 00401000 08:08 1063984    /usr/lib/libXnVFeatures_1_5_2.so
+7a039000-7a03a000 rwxp 00409000 08:08 1063984    /usr/lib/libXnVFeatures_1_5_2.so
+7a03a000-7a04e000 rwxp 00000000 00:00 0 
+7a04e000-7a235000 r-xp 00000000 08:08 1063973    /usr/lib/libXnVFeatures_1_4_2.so
+7a235000-7a238000 r-xp 001e6000 08:08 1063973    /usr/lib/libXnVFeatures_1_4_2.so
+7a238000-7a239000 rwxp 001e9000 08:08 1063973    /usr/lib/libXnVFeatures_1_4_2.so
+7a239000-7a23e000 rwxp 00000000 00:00 0 
+7a23e000-7a425000 r-xp 00000000 08:08 1063968    /usr/lib/libXnVFeatures_1_4_1.so
+7a425000-7a428000 r-xp 001e6000 08:08 1063968    /usr/lib/libXnVFeatures_1_4_1.so
+7a428000-7a429000 rwxp 001e9000 08:08 1063968    /usr/lib/libXnVFeatures_1_4_1.so
+7a429000-7a42e000 rwxp 00000000 00:00 0 
+7a42e000-7a64c000 r-xp 00000000 08:08 1063963    /usr/lib/libXnVFeatures_1_3_1.so
+7a64c000-7a64d000 ---p 0021e000 08:08 1063963    /usr/lib/libXnVFeatures_1_3_1.so
+7a64d000-7a650000 r-xp 0021e000 08:08 1063963    /usr/lib/libXnVFeatures_1_3_1.so
+7a650000-7a651000 rwxp 00221000 08:08 1063963    /usr/lib/libXnVFeatures_1_3_1.so
+7a651000-7a656000 rwxp 00000000 00:00 0 
+7a656000-7a68a000 r-xp 00000000 08:08 1063811    /usr/lib/libnimCodecs.so
+7a68a000-7a68b000 ---p 00034000 08:08 1063811    /usr/lib/libnimCodecs.so
+7a68b000-7a68d000 r-xp 00034000 08:08 1063811    /usr/lib/libnimCodecs.so
+7a68d000-7a68e000 rwxp 00036000 08:08 1063811    /usr/lib/libnimCodecs.so
+7a68e000-7a6ae000 rwxp 00000000 00:00 0 
+7a6ae000-7a6df000 r-xp 00000000 08:08 1063812    /usr/lib/libnimMockNodes.so
+7a6df000-7a6e5000 r-xp 00031000 08:08 1063812    /usr/lib/libnimMockNodes.so
+7a6e5000-7a6e6000 rwxp 00037000 08:08 1063812    /usr/lib/libnimMockNodes.so
+7a6e6000-7a7c4000 r-xp 00000000 08:08 1056768    /usr/lib/i386-linux-gnu/libstdc++.so.6.0.16
+7a7c4000-7a7c5000 ---p 000de000 08:08 1056768    /usr/lib/i386-linux-gnu/libstdc++.so.6.0.16
+7a7c5000-7a7c9000 r-xp 000de000 08:08 1056768    /usr/lib/i386-linux-gnu/libstdc++.so.6.0.16
+7a7c9000-7a7ca000 rwxp 000e2000 08:08 1056768    /usr/lib/i386-linux-gnu/libstdc++.so.6.0.16
+7a7ca000-7a7d1000 rwxp 00000000 00:00 0 
+7a7d1000-7a8a1000 r-xp 00000000 08:08 1063882    /usr/lib/libXnVNite_1_3_1.so
+7a8a1000-7a8a4000 r-xp 000cf000 08:08 1063882    /usr/lib/libXnVNite_1_3_1.so
+7a8a4000-7a8a5000 rwxp 000d2000 08:08 1063882    /usr/lib/libXnVNite_1_3_1.so
+7a8a5000-7a921000 r-xp 00000000 08:08 1063815    /usr/lib/libOpenNI.so
+7a921000-7a923000 r-xp 0007c000 08:08 1063815    /usr/lib/libOpenNI.so
+7a923000-7a925000 rwxp 0007e000 08:08 1063815    /usr/lib/libOpenNI.so
+7a925000-7aa07000 r-xp 00000000 08:08 1199735    /home/alejo/Dropbox/code/devices3d/lib/user/SimpleOpenNI/libSimpleOpenNI.so
+7aa07000-7aa08000 ---p 000e2000 08:08 1199735    /home/alejo/Dropbox/code/devices3d/lib/user/SimpleOpenNI/libSimpleOpenNI.so
+7aa08000-7aa0a000 r-xp 000e2000 08:08 1199735    /home/alejo/Dropbox/code/devices3d/lib/user/SimpleOpenNI/libSimpleOpenNI.so
+7aa0a000-7aa0d000 rwxp 000e4000 08:08 1199735    /home/alejo/Dropbox/code/devices3d/lib/user/SimpleOpenNI/libSimpleOpenNI.so
+7aa0d000-7aa10000 ---p 00000000 00:00 0 
+7aa10000-7aa5e000 rwxp 00000000 00:00 0 
+7aa5e000-7aa61000 ---p 00000000 00:00 0 
+7aa61000-7aaaf000 rwxp 00000000 00:00 0 
+7aaaf000-7aab2000 ---p 00000000 00:00 0 
+7aab2000-7ab00000 rwxp 00000000 00:00 0 
+7ab00000-7abdb000 rwxp 00000000 00:00 0 
+7abdb000-7ac00000 ---p 00000000 00:00 0 
+7ac0d000-7ac10000 ---p 00000000 00:00 0 
+7ac10000-7ac5e000 rwxp 00000000 00:00 0 
+7ac5e000-7ac61000 ---p 00000000 00:00 0 
+7ac61000-7acaf000 rwxp 00000000 00:00 0 
+7acaf000-7acb2000 ---p 00000000 00:00 0 
+7acb2000-7ad00000 rwxp 00000000 00:00 0 
+7ad00000-7adf9000 rwxp 00000000 00:00 0 
+7adf9000-7ae00000 ---p 00000000 00:00 0 
+7ae07000-7ae34000 r-xp 00000000 08:08 1064003    /usr/lib/libXnDeviceFile.so
+7ae34000-7ae35000 r-xp 0002d000 08:08 1064003    /usr/lib/libXnDeviceFile.so
+7ae35000-7ae36000 rwxp 0002e000 08:08 1064003    /usr/lib/libXnDeviceFile.so
+7ae36000-7ae37000 r-xs 00000000 08:08 1188895    /var/cache/fontconfig/c05880de57d1f5e948fdfacc138775d9-le32d4.cache-3
+7ae37000-7ae3d000 r-xs 00000000 08:08 1188892    /var/cache/fontconfig/945677eb7aeaf62f1d50efc3fb3ec7d8-le32d4.cache-3
+7ae3d000-7ae3f000 r-xs 00000000 08:08 1188893    /var/cache/fontconfig/99e8ed0e538f840c565b6ed5dad60d56-le32d4.cache-3
+7ae3f000-7ae42000 r-xs 00000000 08:08 1206717    /var/cache/fontconfig/e383d7ea5fbe662a33d9b44caf393297-le32d4.cache-3
+7ae42000-7ae45000 r-xs 00000000 08:08 1188879    /var/cache/fontconfig/2cd17615ca594fa2959ae173292e504c-le32d4.cache-3
+7ae45000-7ae46000 r-xs 00000000 08:08 1188903    /var/cache/fontconfig/e7071f4a29fa870f4323321c154eba04-le32d4.cache-3
+7ae46000-7ae48000 r-xs 00000000 08:08 1191776    /var/cache/fontconfig/b5ea634b0fb353b8ea17632d1f9ef766-le32d4.cache-3
+7ae48000-7ae4c000 r-xs 00000000 08:08 1188889    /var/cache/fontconfig/6eb3985aa4124903f6ff08ba781cd364-le32d4.cache-3
+7ae4c000-7ae4d000 r-xs 00000000 08:08 1188883    /var/cache/fontconfig/4c73fe0c47614734b17d736dbde7580a-le32d4.cache-3
+7ae4d000-7ae4e000 r-xs 00000000 08:08 1188876    /var/cache/fontconfig/0d8c3b2ac0904cb8a57a757ad11a4a08-le32d4.cache-3
+7ae4e000-7ae4f000 r-xs 00000000 08:08 1188887    /var/cache/fontconfig/6a53c69dea097a2d716e069445527da8-le32d4.cache-3
+7ae4f000-7ae53000 r-xs 00000000 08:08 1188894    /var/cache/fontconfig/a755afe4a08bf5b97852ceb7400b47bc-le32d4.cache-3
+7ae53000-7ae57000 r-xs 00000000 08:08 1188884    /var/cache/fontconfig/515ca1ebc4b18308bea979be5704f9db-le32d4.cache-3
+7ae57000-7ae5e000 r-xs 00000000 08:08 1188888    /var/cache/fontconfig/6d41288fd70b0be22e8c3a91e032eec0-le32d4.cache-3
+7ae5e000-7ae69000 r-xs 00000000 08:08 1188877    /var/cache/fontconfig/0f34bcd4b6ee430af32735b75db7f02b-le32d4.cache-3
+7ae6c000-7ae8f000 r-xp 00000000 08:08 1063813    /usr/lib/libnimRecorder.so
+7ae8f000-7ae90000 r-xp 00023000 08:08 1063813    /usr/lib/libnimRecorder.so
+7ae90000-7ae91000 rwxp 00024000 08:08 1063813    /usr/lib/libnimRecorder.so
+7ae91000-7aead000 r-xp 00000000 08:08 1573816    /lib/i386-linux-gnu/libgcc_s.so.1
+7aead000-7aeae000 r-xp 0001b000 08:08 1573816    /lib/i386-linux-gnu/libgcc_s.so.1
+7aeae000-7aeaf000 rwxp 0001c000 08:08 1573816    /lib/i386-linux-gnu/libgcc_s.so.1
+7aeaf000-7aeb2000 ---p 00000000 00:00 0 
+7aeb2000-7af00000 rwxp 00000000 00:00 0 
+7af00000-7afff000 rwxp 00000000 00:00 0 
+7afff000-7b000000 ---p 00000000 00:00 0 
+7b006000-7b028000 r-xs 00000000 08:08 1206716    /var/cache/fontconfig/365b55f210c0a22e9a19e35191240f32-le32d4.cache-3
+7b028000-7b035000 r-xs 00000000 08:08 1188899    /var/cache/fontconfig/d52a8644073d54c13679302ca1180695-le32d4.cache-3
+7b041000-7b04c000 r-xp 00000000 08:08 408705     /opt/microchip/mplabx/mplab_ide/mplablibs/modules/lib/libusb-1.0.so.0.0.0
+7b04c000-7b04d000 rwxp 0000a000 08:08 408705     /opt/microchip/mplabx/mplab_ide/mplablibs/modules/lib/libusb-1.0.so.0.0.0
+7b068000-7b069000 rwxp 00000000 00:00 0 
+7b069000-7b070000 r-xp 00000000 08:08 1181319    /usr/lib/jvm/java-6-sun-1.6.0.26/jre/lib/i386/libnio.so
+7b070000-7b071000 rwxp 00006000 08:08 1181319    /usr/lib/jvm/java-6-sun-1.6.0.26/jre/lib/i386/libnio.so
+7b071000-7b075000 r-xp 00000000 08:08 1056426    /usr/lib/i386-linux-gnu/libXfixes.so.3.1.0
+7b075000-7b076000 r-xp 00003000 08:08 1056426    /usr/lib/i386-linux-gnu/libXfixes.so.3.1.0
+7b076000-7b077000 rwxp 00004000 08:08 1056426    /usr/lib/i386-linux-gnu/libXfixes.so.3.1.0
+7b077000-7b080000 r-xp 00000000 08:08 1056446    /usr/lib/i386-linux-gnu/libXrender.so.1.3.0
+7b080000-7b081000 r-xp 00008000 08:08 1056446    /usr/lib/i386-linux-gnu/libXrender.so.1.3.0
+7b081000-7b082000 rwxp 00009000 08:08 1056446    /usr/lib/i386-linux-gnu/libXrender.so.1.3.0
+7b082000-7b08b000 r-xp 00000000 08:08 1056410    /usr/lib/i386-linux-gnu/libXcursor.so.1.0.2
+7b08b000-7b08c000 r-xp 00008000 08:08 1056410    /usr/lib/i386-linux-gnu/libXcursor.so.1.0.2
+7b08c000-7b08d000 rwxp 00009000 08:08 1056410    /usr/lib/i386-linux-gnu/libXcursor.so.1.0.2
+7b08d000-7b090000 r-xp 00000000 08:08 1064001    /usr/lib/libXnCore.so
+7b090000-7b091000 r-xp 00002000 08:08 1064001    /usr/lib/libXnCore.so
+7b091000-7b092000 rwxp 00003000 08:08 1064001    /usr/lib/libXnCore.so
+7b092000-7b093000 r-xp 00000000 08:08 1181308    /usr/lib/jvm/java-6-sun-1.6.0.26/jre/lib/i386/libjawt.so
+7b093000-7b094000 rwxp 00000000 08:08 1181308    /usr/lib/jvm/java-6-sun-1.6.0.26/jre/lib/i386/libjawt.so
+7b094000-7b0a8000 r-xp 00000000 08:08 1181318    /usr/lib/jvm/java-6-sun-1.6.0.26/jre/lib/i386/libnet.so
+7b0a8000-7b0a9000 rwxp 00013000 08:08 1181318    /usr/lib/jvm/java-6-sun-1.6.0.26/jre/lib/i386/libnet.so
+7b0a9000-7b0b7000 r-xs 00000000 08:08 1190496    /var/cache/fontconfig/e13b20fdb08344e0e664864cc2ede53d-le32d4.cache-3
+7b0b7000-7b0c5000 r-xs 00000000 08:08 1190505    /var/cache/fontconfig/865f88548240fee46819705c6468c165-le32d4.cache-3
+7b0c5000-7b0c8000 ---p 00000000 00:00 0 
+7b0c8000-7b116000 rwxp 00000000 00:00 0 
+7b116000-7b18f000 r-xp 00000000 08:08 1181295    /usr/lib/jvm/java-6-sun-1.6.0.26/jre/lib/i386/libfontmanager.so
+7b18f000-7b199000 rwxp 00078000 08:08 1181295    /usr/lib/jvm/java-6-sun-1.6.0.26/jre/lib/i386/libfontmanager.so
+7b199000-7b19e000 rwxp 00000000 00:00 0 
+7b19e000-7b1b5000 r-xs 0015b000 08:08 1199687    /home/alejo/Dropbox/code/devices3d/lib/base/core/ant.jar
+7b1b5000-7b1d2000 r-xp 00000000 08:08 1056813    /usr/lib/i386-linux-gnu/libxcb.so.1.1.0
+7b1d2000-7b1d3000 r-xp 0001c000 08:08 1056813    /usr/lib/i386-linux-gnu/libxcb.so.1.1.0
+7b1d3000-7b1d4000 rwxp 0001d000 08:08 1056813    /usr/lib/i386-linux-gnu/libxcb.so.1.1.0
+7b1d4000-7b305000 r-xp 00000000 08:08 1056398    /usr/lib/i386-linux-gnu/libX11.so.6.3.0
+7b305000-7b306000 ---p 00131000 08:08 1056398    /usr/lib/i386-linux-gnu/libX11.so.6.3.0
+7b306000-7b307000 r-xp 00131000 08:08 1056398    /usr/lib/i386-linux-gnu/libX11.so.6.3.0
+7b307000-7b309000 rwxp 00132000 08:08 1056398    /usr/lib/i386-linux-gnu/libX11.so.6.3.0
+7b309000-7b30a000 rwxp 00000000 00:00 0 
+7b30a000-7b34d000 r-xp 00000000 08:08 1181341    /usr/lib/jvm/java-6-sun-1.6.0.26/jre/lib/i386/xawt/libmawt.so
+7b34d000-7b34f000 rwxp 00043000 08:08 1181341    /usr/lib/jvm/java-6-sun-1.6.0.26/jre/lib/i386/xawt/libmawt.so
+7b34f000-7b350000 rwxp 00000000 00:00 0 
+7b350000-7b3d5000 r-xp 00000000 08:08 1181290    /usr/lib/jvm/java-6-sun-1.6.0.26/jre/lib/i386/libawt.so
+7b3d5000-7b3dc000 rwxp 00085000 08:08 1181290    /usr/lib/jvm/java-6-sun-1.6.0.26/jre/lib/i386/libawt.so
+7b3dc000-7b400000 rwxp 00000000 00:00 0 
+7b400000-7b4fd000 rwxp 00000000 00:00 0 
+7b4fd000-7b500000 ---p 00000000 00:00 0 
+7b500000-7b503000 r-xs 00000000 08:08 1188900    /var/cache/fontconfig/d60319d88cac85ba9e1a07bd06cfbb8c-le32d4.cache-3
+7b503000-7b509000 r-xs 00000000 08:08 1206713    /var/cache/fontconfig/153bb866d4d26e7cd19eee2129f8d8d2-le32d4.cache-3
+7b509000-7b50c000 r-xs 00000000 08:08 1206715    /var/cache/fontconfig/7ef2298fde41cc6eeb7af42e48b7d293-le32d4.cache-3
+7b50c000-7b51a000 r-xp 00000000 08:08 1056434    /usr/lib/i386-linux-gnu/libXi.so.6.1.0
+7b51a000-7b51b000 r-xp 0000d000 08:08 1056434    /usr/lib/i386-linux-gnu/libXi.so.6.1.0
+7b51b000-7b51c000 rwxp 0000e000 08:08 1056434    /usr/lib/i386-linux-gnu/libXi.so.6.1.0
+7b51c000-7b52d000 r-xp 00000000 08:08 1056422    /usr/lib/i386-linux-gnu/libXext.so.6.4.0
+7b52d000-7b52e000 r-xp 00010000 08:08 1056422    /usr/lib/i386-linux-gnu/libXext.so.6.4.0
+7b52e000-7b52f000 rwxp 00011000 08:08 1056422    /usr/lib/i386-linux-gnu/libXext.so.6.4.0
+7b52f000-7b530000 ---p 00000000 00:00 0 
+7b530000-7b5b0000 rwxp 00000000 00:00 0 
+7b5b0000-7b5b3000 ---p 00000000 00:00 0 
+7b5b3000-7b601000 rwxp 00000000 00:00 0 
+7b601000-7b604000 ---p 00000000 00:00 0 
+7b604000-7b682000 rwxp 00000000 00:00 0 
+7b682000-7b685000 ---p 00000000 00:00 0 
+7b685000-7b703000 rwxp 00000000 00:00 0 
+7b703000-7b706000 ---p 00000000 00:00 0 
+7b706000-7b754000 rwxp 00000000 00:00 0 
+7b754000-7b755000 r-xp 00571000 08:08 1057169    /usr/lib/locale/locale-archive
+7b755000-7b886000 r-xp 0043d000 08:08 1057169    /usr/lib/locale/locale-archive
+7b886000-7b8c6000 r-xp 002bd000 08:08 1057169    /usr/lib/locale/locale-archive
+7b8c6000-7bac6000 r-xp 00000000 08:08 1057169    /usr/lib/locale/locale-archive
+7bac6000-7bac9000 ---p 00000000 00:00 0 
+7bac9000-7bb17000 rwxp 00000000 00:00 0 
+7bb17000-7bb1a000 ---p 00000000 00:00 0 
+7bb1a000-7bb68000 rwxp 00000000 00:00 0 
+7bb68000-7bd00000 r-xs 03029000 08:08 1181157    /usr/lib/jvm/java-6-sun-1.6.0.26/jre/lib/rt.jar
+7bd00000-7be00000 rwxp 00000000 00:00 0 
+7be00000-7be05000 r-xp 00000000 08:08 1056418    /usr/lib/i386-linux-gnu/libXdmcp.so.6.0.0
+7be05000-7be06000 r-xp 00004000 08:08 1056418    /usr/lib/i386-linux-gnu/libXdmcp.so.6.0.0
+7be06000-7be07000 rwxp 00005000 08:08 1056418    /usr/lib/i386-linux-gnu/libXdmcp.so.6.0.0
+7be07000-7be0c000 r-xp 00000000 08:08 1052626    /usr/lib/libXtst.so.6.1.0
+7be0c000-7be0d000 r-xp 00004000 08:08 1052626    /usr/lib/libXtst.so.6.1.0
+7be0d000-7be0e000 rwxp 00005000 08:08 1052626    /usr/lib/libXtst.so.6.1.0
+7be0f000-7be12000 r-xs 00017000 08:08 1199756    /home/alejo/Dropbox/code/devices3d/lib/user/proscene/proscene.jar
+7be12000-7be14000 r-xs 00003000 08:08 1199742    /home/alejo/Dropbox/code/devices3d/lib/user/fullscreen/fullscreen.jar
+7be14000-7be18000 r-xs 00020000 08:08 1199717    /home/alejo/Dropbox/code/devices3d/lib/user/SimpleOpenNI/SimpleOpenNI.jar
+7be18000-7be1b000 r-xs 00029000 08:08 2123900    /home/alejo/Dropbox/code/devices3d/lib/user/procontroll/procontroll.jar
+7be1b000-7be1d000 r-xs 0002b000 08:08 1199690    /home/alejo/Dropbox/code/devices3d/lib/base/core/core.jar
+7be1d000-7be28000 r-xs 00108000 08:08 1326150    /home/alejo/Dropbox/code/devices3d/lib/base/opengl/jogl.jar
+7be28000-7be29000 r-xs 00004000 08:08 1326149    /home/alejo/Dropbox/code/devices3d/lib/base/opengl/gluegen-rt.jar
+7be29000-7be2a000 r-xs 00003000 08:08 1326148    /home/alejo/Dropbox/code/devices3d/lib/base/opengl/opengl.jar
+7be2a000-7be2b000 ---p 00000000 00:00 0 
+7be2b000-7bedf000 rwxp 00000000 00:00 0 
+7bedf000-7bee0000 ---p 00000000 00:00 0 
+7bee0000-7bf60000 rwxp 00000000 00:00 0 
+7bf60000-7bf61000 ---p 00000000 00:00 0 
+7bf61000-7bfe1000 rwxp 00000000 00:00 0 
+7bfe1000-7bfe2000 ---p 00000000 00:00 0 
+7bfe2000-7c062000 rwxp 00000000 00:00 0 
+7c062000-7c063000 ---p 00000000 00:00 0 
+7c063000-7c0eb000 rwxp 00000000 00:00 0 
+7c0eb000-7c103000 rwxp 00000000 00:00 0 
+7c103000-7c115000 rwxp 00000000 00:00 0 
+7c115000-7c215000 rwxp 00000000 00:00 0 
+7c215000-7c21d000 rwxp 00000000 00:00 0 
+7c21d000-7c235000 rwxp 00000000 00:00 0 
+7c235000-7c247000 rwxp 00000000 00:00 0 
+7c247000-7c346000 rwxp 00000000 00:00 0 
+7c346000-7c356000 rwxp 00000000 00:00 0 
+7c356000-7c3cf000 rwxp 00000000 00:00 0 
+7c3cf000-7d3d0000 rwxp 00000000 00:00 0 
+7d3d0000-803d0000 rwxp 00000000 00:00 0 
+803d0000-82600000 rwxp 00000000 00:00 0 
+82600000-a2680000 rwxp 00000000 00:00 0 
+a2680000-a4460000 rwxp 00000000 00:00 0 
+a4460000-b37d0000 rwxp 00000000 00:00 0 
+b37d0000-b37d9000 rwxp 00000000 00:00 0 
+b37d9000-b3890000 rwxp 00000000 00:00 0 
+b3890000-b3ad0000 rwxp 00000000 00:00 0 
+b3ad0000-b6890000 rwxp 00000000 00:00 0 
+b6890000-b689b000 r-xp 00000000 08:08 1573836    /lib/i386-linux-gnu/libnss_files-2.13.so
+b689b000-b689c000 r-xp 0000a000 08:08 1573836    /lib/i386-linux-gnu/libnss_files-2.13.so
+b689c000-b689d000 rwxp 0000b000 08:08 1573836    /lib/i386-linux-gnu/libnss_files-2.13.so
+b689d000-b68a7000 r-xp 00000000 08:08 1573840    /lib/i386-linux-gnu/libnss_nis-2.13.so
+b68a7000-b68a8000 r-xp 00009000 08:08 1573840    /lib/i386-linux-gnu/libnss_nis-2.13.so
+b68a8000-b68a9000 rwxp 0000a000 08:08 1573840    /lib/i386-linux-gnu/libnss_nis-2.13.so
+b68a9000-b68be000 r-xp 00000000 08:08 1573830    /lib/i386-linux-gnu/libnsl-2.13.so
+b68be000-b68bf000 r-xp 00015000 08:08 1573830    /lib/i386-linux-gnu/libnsl-2.13.so
+b68bf000-b68c0000 rwxp 00016000 08:08 1573830    /lib/i386-linux-gnu/libnsl-2.13.so
+b68c0000-b68c2000 rwxp 00000000 00:00 0 
+b68c2000-b68c3000 r-xs 00000000 08:08 1193307    /var/cache/fontconfig/4794a0821666d79190d59a36cb4f44b5-le32d4.cache-3
+b68c3000-b68c5000 r-xs 00002000 08:08 1199642    /home/alejo/Dropbox/code/devices3d/lib/base/core/ant-launcher.jar
+b68c5000-b68d4000 r-xp 00000000 08:08 1181329    /usr/lib/jvm/java-6-sun-1.6.0.26/jre/lib/i386/libzip.so
+b68d4000-b68d6000 rwxp 0000e000 08:08 1181329    /usr/lib/jvm/java-6-sun-1.6.0.26/jre/lib/i386/libzip.so
+b68d6000-b68de000 rwxs 00000000 08:08 407532     /tmp/hsperfdata_alejo/7193
+b68de000-b6901000 r-xp 00000000 08:08 1181303    /usr/lib/jvm/java-6-sun-1.6.0.26/jre/lib/i386/libjava.so
+b6901000-b6903000 rwxp 00023000 08:08 1181303    /usr/lib/jvm/java-6-sun-1.6.0.26/jre/lib/i386/libjava.so
+b6903000-b690a000 r-xp 00000000 08:08 1573859    /lib/i386-linux-gnu/librt-2.13.so
+b690a000-b690b000 r-xp 00006000 08:08 1573859    /lib/i386-linux-gnu/librt-2.13.so
+b690b000-b690c000 rwxp 00007000 08:08 1573859    /lib/i386-linux-gnu/librt-2.13.so
+b690c000-b690f000 ---p 00000000 00:00 0 
+b690f000-b695d000 rwxp 00000000 00:00 0 
+b695d000-b6985000 r-xp 00000000 08:08 1573825    /lib/i386-linux-gnu/libm-2.13.so
+b6985000-b6986000 r-xp 00028000 08:08 1573825    /lib/i386-linux-gnu/libm-2.13.so
+b6986000-b6987000 rwxp 00029000 08:08 1573825    /lib/i386-linux-gnu/libm-2.13.so
+b6987000-b7139000 r-xp 00000000 08:08 1181340    /usr/lib/jvm/java-6-sun-1.6.0.26/jre/lib/i386/server/libjvm.so
+b7139000-b718d000 rwxp 007b1000 08:08 1181340    /usr/lib/jvm/java-6-sun-1.6.0.26/jre/lib/i386/server/libjvm.so
+b718d000-b75ac000 rwxp 00000000 00:00 0 
+b75ac000-b7722000 r-xp 00000000 08:08 1573795    /lib/i386-linux-gnu/libc-2.13.so
+b7722000-b7724000 r-xp 00176000 08:08 1573795    /lib/i386-linux-gnu/libc-2.13.so
+b7724000-b7725000 rwxp 00178000 08:08 1573795    /lib/i386-linux-gnu/libc-2.13.so
+b7725000-b7728000 rwxp 00000000 00:00 0 
+b7728000-b772b000 r-xp 00000000 08:08 1573806    /lib/i386-linux-gnu/libdl-2.13.so
+b772b000-b772c000 r-xp 00002000 08:08 1573806    /lib/i386-linux-gnu/libdl-2.13.so
+b772c000-b772d000 rwxp 00003000 08:08 1573806    /lib/i386-linux-gnu/libdl-2.13.so
+b772d000-b7734000 r-xp 00000000 08:08 1181335    /usr/lib/jvm/java-6-sun-1.6.0.26/jre/lib/i386/jli/libjli.so
+b7734000-b7736000 rwxp 00006000 08:08 1181335    /usr/lib/jvm/java-6-sun-1.6.0.26/jre/lib/i386/jli/libjli.so
+b7736000-b7737000 rwxp 00000000 00:00 0 
+b7737000-b774e000 r-xp 00000000 08:08 1573855    /lib/i386-linux-gnu/libpthread-2.13.so
+b774e000-b774f000 r-xp 00016000 08:08 1573855    /lib/i386-linux-gnu/libpthread-2.13.so
+b774f000-b7750000 rwxp 00017000 08:08 1573855    /lib/i386-linux-gnu/libpthread-2.13.so
+b7750000-b7752000 rwxp 00000000 00:00 0 
+b7752000-b7754000 r-xp 00000000 08:08 1056402    /usr/lib/i386-linux-gnu/libXau.so.6.0.0
+b7754000-b7755000 r-xp 00001000 08:08 1056402    /usr/lib/i386-linux-gnu/libXau.so.6.0.0
+b7755000-b7756000 rwxp 00002000 08:08 1056402    /usr/lib/i386-linux-gnu/libXau.so.6.0.0
+b7756000-b775e000 r-xp 00000000 08:08 1573832    /lib/i386-linux-gnu/libnss_compat-2.13.so
+b775e000-b775f000 r-xp 00007000 08:08 1573832    /lib/i386-linux-gnu/libnss_compat-2.13.so
+b775f000-b7760000 rwxp 00008000 08:08 1573832    /lib/i386-linux-gnu/libnss_compat-2.13.so
+b7760000-b7761000 rwxp 00000000 00:00 0 
+b7761000-b7762000 r-xp 00000000 00:00 0 
+b7762000-b776d000 r-xp 00000000 08:08 1181328    /usr/lib/jvm/java-6-sun-1.6.0.26/jre/lib/i386/libverify.so
+b776d000-b776e000 rwxp 0000b000 08:08 1181328    /usr/lib/jvm/java-6-sun-1.6.0.26/jre/lib/i386/libverify.so
+b776e000-b7770000 rwxp 00000000 00:00 0 
+b7770000-b7771000 r-xp 00000000 00:00 0          [vdso]
+b7771000-b778f000 r-xp 00000000 08:08 1573782    /lib/i386-linux-gnu/ld-2.13.so
+b778f000-b7790000 r-xp 0001d000 08:08 1573782    /lib/i386-linux-gnu/ld-2.13.so
+b7790000-b7791000 rwxp 0001e000 08:08 1573782    /lib/i386-linux-gnu/ld-2.13.so
+bfebc000-bfedd000 rwxp 00000000 00:00 0          [stack]
+
+VM Arguments:
+jvm_args: -Djava.library.path=/home/alejo/Dropbox/code/devices3d/lib/base/opengl:/home/alejo/Dropbox/code/devices3d/lib/base/opengl:/home/alejo/Dropbox/code/devices3d/lib/base/opengl:/home/alejo/Dropbox/code/devices3d/lib/base/core:/home/alejo/Dropbox/code/devices3d/lib/base/core:/home/alejo/Dropbox/code/devices3d/lib/base/core:/home/alejo/Dropbox/code/devices3d/lib/user/procontroll:/home/alejo/Dropbox/code/devices3d/lib/user/SimpleOpenNI:/home/alejo/Dropbox/code/devices3d/lib/user/fullscreen:/home/alejo/Dropbox/code/devices3d/lib/user/proscene -Djava.security.policy=java.policy.applet -Dfile.encoding=UTF-8 
+java_command: sun.applet.AppletViewer devices3d.Devices3d1333676432229.html
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+PATH=/opt/microchip/mplabc32/v2.02/bin:/opt/microchip/mplabc30/v3.30c/bin:/usr/lib/lightdm/lightdm:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games
+USERNAME=alejo
+LD_LIBRARY_PATH=/usr/lib/jvm/java-6-sun-1.6.0.26/jre/lib/i386/server:/usr/lib/jvm/java-6-sun-1.6.0.26/jre/lib/i386:/usr/lib/jvm/java-6-sun-1.6.0.26/jre/../lib/i386:/usr/lib/jvm/java-6-sun-1.6.0.26/jre/lib/i386/client:/usr/lib/jvm/java-6-sun-1.6.0.26/jre/lib/i386:
+SHELL=/bin/bash
+DISPLAY=:0.0
+
+Signal Handlers:
+SIGSEGV: [libjvm.so+0x725510], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGBUS: [libjvm.so+0x725510], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGFPE: [libjvm.so+0x5dff20], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGPIPE: [libjvm.so+0x5dff20], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGXFSZ: [libjvm.so+0x5dff20], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGILL: [libjvm.so+0x5dff20], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGUSR1: SIG_DFL, sa_mask[0]=0x00000000, sa_flags=0x00000000
+SIGUSR2: [libjvm.so+0x5e3160], sa_mask[0]=0x00000004, sa_flags=0x10000004
+SIGHUP: [libjvm.so+0x5e2d40], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGINT: [libjvm.so+0x5e2d40], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGTERM: [libjvm.so+0x5e2d40], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGQUIT: [libjvm.so+0x5e2d40], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+
+
+---------------  S Y S T E M  ---------------
+
+OS:wheezy/sid
+
+uname:Linux 3.0.0-12-generic #20-Ubuntu SMP Fri Oct 7 14:50:42 UTC 2011 i686
+libc:glibc 2.13 NPTL 2.13 
+rlimit: STACK 8192k, CORE 0k, NPROC 26110, NOFILE 4096, AS infinity
+load average:0.12 0.14 0.14
+
+/proc/meminfo:
+MemTotal:        3356112 kB
+MemFree:          488752 kB
+Buffers:          320032 kB
+Cached:          1051612 kB
+SwapCached:            0 kB
+Active:          1510328 kB
+Inactive:        1008292 kB
+Active(anon):    1149364 kB
+Inactive(anon):    11660 kB
+Active(file):     360964 kB
+Inactive(file):   996632 kB
+Unevictable:          16 kB
+Mlocked:              16 kB
+HighTotal:       2497096 kB
+HighFree:         103524 kB
+LowTotal:         859016 kB
+LowFree:          385228 kB
+SwapTotal:      14645240 kB
+SwapFree:       14645240 kB
+Dirty:               516 kB
+Writeback:             0 kB
+AnonPages:       1146780 kB
+Mapped:           318172 kB
+Shmem:             14052 kB
+Slab:              98156 kB
+SReclaimable:      76608 kB
+SUnreclaim:        21548 kB
+KernelStack:        4472 kB
+PageTables:        21148 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:    16323296 kB
+Committed_AS:    4165616 kB
+VmallocTotal:     122880 kB
+VmallocUsed:       59252 kB
+VmallocChunk:      58104 kB
+HardwareCorrupted:     0 kB
+AnonHugePages:         0 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       4096 kB
+DirectMap4k:       12280 kB
+DirectMap4M:      897024 kB
+
+
+CPU:total 4 (4 cores per cpu, 1 threads per core) family 16 model 4 stepping 3, cmov, cx8, fxsr, mmx, sse, sse2, sse3, popcnt, mmxext, 3dnow, 3dnowext, lzcnt, sse4a
+
+/proc/cpuinfo:
+processor	: 0
+vendor_id	: AuthenticAMD
+cpu family	: 16
+model		: 4
+model name	: AMD Phenom(tm) II X4 945 Processor
+stepping	: 3
+cpu MHz		: 3010.822
+cache size	: 512 KB
+physical id	: 0
+siblings	: 4
+core id		: 0
+cpu cores	: 4
+apicid		: 0
+initial apicid	: 0
+fdiv_bug	: no
+hlt_bug		: no
+f00f_bug	: no
+coma_bug	: no
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 5
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm 3dnowext 3dnow constant_tsc nonstop_tsc extd_apicid pni monitor cx16 popcnt lahf_lm cmp_legacy svm extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ibs skinit wdt npt lbrv svm_lock nrip_save
+bogomips	: 6021.64
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 48 bits physical, 48 bits virtual
+power management: ts ttp tm stc 100mhzsteps hwpstate
+
+processor	: 1
+vendor_id	: AuthenticAMD
+cpu family	: 16
+model		: 4
+model name	: AMD Phenom(tm) II X4 945 Processor
+stepping	: 3
+cpu MHz		: 3010.822
+cache size	: 512 KB
+physical id	: 0
+siblings	: 4
+core id		: 1
+cpu cores	: 4
+apicid		: 1
+initial apicid	: 1
+fdiv_bug	: no
+hlt_bug		: no
+f00f_bug	: no
+coma_bug	: no
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 5
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm 3dnowext 3dnow constant_tsc nonstop_tsc extd_apicid pni monitor cx16 popcnt lahf_lm cmp_legacy svm extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ibs skinit wdt npt lbrv svm_lock nrip_save
+bogomips	: 6020.55
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 48 bits physical, 48 bits virtual
+power management: ts ttp tm stc 100mhzsteps hwpstate
+
+processor	: 2
+vendor_id	: AuthenticAMD
+cpu family	: 16
+model		: 4
+model name	: AMD Phenom(tm) II X4 945 Processor
+stepping	: 3
+cpu MHz		: 3010.822
+cache size	: 512 KB
+physical id	: 0
+siblings	: 4
+core id		: 2
+cpu cores	: 4
+apicid		: 2
+initial apicid	: 2
+fdiv_bug	: no
+hlt_bug		: no
+f00f_bug	: no
+coma_bug	: no
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 5
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm 3dnowext 3dnow constant_tsc nonstop_tsc extd_apicid pni monitor cx16 popcnt lahf_lm cmp_legacy svm extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ibs skinit wdt npt lbrv svm_lock nrip_save
+bogomips	: 6020.55
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 48 bits physical, 48 bits virtual
+power management: ts ttp tm stc 100mhzsteps hwpstate
+
+processor	: 3
+vendor_id	: AuthenticAMD
+cpu family	: 16
+model		: 4
+model name	: AMD Phenom(tm) II X4 945 Processor
+stepping	: 3
+cpu MHz		: 3010.822
+cache size	: 512 KB
+physical id	: 0
+siblings	: 4
+core id		: 3
+cpu cores	: 4
+apicid		: 3
+initial apicid	: 3
+fdiv_bug	: no
+hlt_bug		: no
+f00f_bug	: no
+coma_bug	: no
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 5
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm 3dnowext 3dnow constant_tsc nonstop_tsc extd_apicid pni monitor cx16 popcnt lahf_lm cmp_legacy svm extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ibs skinit wdt npt lbrv svm_lock nrip_save
+bogomips	: 6020.55
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 48 bits physical, 48 bits virtual
+power management: ts ttp tm stc 100mhzsteps hwpstate
+
+
+
+Memory: 4k page, physical 3356112k(488752k free), swap 14645240k(14645240k free)
+
+vm_info: Java HotSpot(TM) Server VM (20.1-b02) for linux-x86 JRE (1.6.0_26-b03), built on May  4 2011 01:04:10 by "java_re" with gcc 3.2.1-7a (J2SE release)
+
+time: Thu Apr  5 20:40:32 2012
+elapsed time: 0 seconds
+

@@ -10,6 +10,9 @@
 package remixlab.devices;
 
 import java.awt.Color;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PVector;
@@ -42,6 +45,8 @@ public class Kinect {
 		parent = p;
 		scene=s;
 		starting=new PVector(0,0,1200);
+		//Verify if is possible load the Kinect drivers
+		setDrivers();
 		context = new SimpleOpenNI(parent);
 		// mirror is by default enabled
 		context.setMirror(true);
@@ -240,6 +245,37 @@ public class Kinect {
 		}else{
 			left = hands[1];
 			right = hands[0];
+		}
+	}
+	/**
+	 * This function verify if the gspca_kinect module is loaded
+	 * if is loaded
+	 * 		shows the gksudo window to deactivate the gspca_kinect
+	 * else
+	 * 		continue with the load of the Kinect
+	 * */
+	private void setDrivers(){
+		try{
+			boolean delete=false;
+			//Search for the gspca_kinect module
+			String[] lsmod = {"/bin/sh","-c","lsmod | grep gspca_kinect"};
+			Process p = Runtime.getRuntime().exec(lsmod);
+			BufferedReader d = new BufferedReader(new InputStreamReader(p.getInputStream()));
+			try {
+				//If found the module, trigger gksudo to remove the module
+				if(d.readLine()!= null){
+			    	PApplet.println("Module gspca_kinect found.");
+			    	delete=true;
+			    }
+		    } catch (IOException e) {
+		    	PApplet.println("Can't verify if the gspca_kinect is loaded.");
+		    }
+			if(delete){
+				String[] rmmod = {"/bin/sh","-c","gksudo /sbin/rmmod gspca_kinect -m 'The gspca_kinect module is loaded. Needed delete it to run the Kinect drivers. Please restart the application after logging.'"};
+		    	Runtime.getRuntime().exec(rmmod);
+			}
+		}catch(java.io.IOException e){
+			PApplet.println("ERROR:: "+e);
 		}
 	}
 }
