@@ -9,13 +9,13 @@
  * */
 package remixlab.devices;
 
-import processing.core.PApplet;
 import processing.core.PVector;
 import SimpleOpenNI.XnVHandPointContext;
 import SimpleOpenNI.XnVPointControl;
 class PointControl extends XnVPointControl{
 	Kinect kinect;
 	int cantHands;
+	PVector[] hands;
 	/////////////////////////////////////// CONSTRUCTORS ///////////////////////////////////////
 	/**
 	 * PointControl constructor
@@ -24,8 +24,10 @@ class PointControl extends XnVPointControl{
 	public PointControl(Kinect k){
 		kinect=k;
 		cantHands=0;
+		hands=new PVector[2];
+		hands[0]=new PVector();
+		hands[1]=new PVector();
 	}
-	
 	/////////////////////////////////////// GET AND SET ///////////////////////////////////////
 	/**
 	 * Get the quantity of hands registered 
@@ -33,20 +35,20 @@ class PointControl extends XnVPointControl{
 	public int getHands(){
 		return cantHands;
 	}
-	
 	/////////////////////////////////////// CALLBAKS ///////////////////////////////////////
 	public void OnPointCreate(XnVHandPointContext cxt){
-		PApplet.println("OnPointCreate, handId: " + cxt.getNID());
+		System.out.println("OnPointCreate, handId: " + cxt.getNID());
 		PVector vector = new PVector(cxt.getPtPosition().getX(), cxt.getPtPosition().getY(), cxt.getPtPosition().getZ());
 		kinect.setStarting(vector);
 		cantHands++;
 	}
 	public void OnPointUpdate(XnVHandPointContext cxt){
 		PVector vector = new PVector(cxt.getPtPosition().getX(), cxt.getPtPosition().getY(), cxt.getPtPosition().getZ());
-		kinect.setHands(cxt.getNID(),vector);
+		// Assign the point to the hand using module
+		hands[(int) (cxt.getNID() % 2)]=vector;
 	}
 	public void OnPointDestroy(long nID){
-		PApplet.println("OnPointDestroy, handId: " + nID);
+		System.out.println("OnPointDestroy, handId: " + nID);
 		cantHands--;
 	}
 }

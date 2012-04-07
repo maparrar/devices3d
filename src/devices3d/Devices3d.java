@@ -10,26 +10,36 @@
 package devices3d;
 
 import java.awt.Color;
+
 import processing.core.PApplet;
 import processing.core.PVector;
 import remixlab.devices.*;
+import remixlab.experiments.*;
 import remixlab.proscene.*;
 
 /**
  * TODO: Define the movement to rotate in x axis 
- * TODO: Build the tunnel 
- * TODO: Constrain the movement to the tunnel 
- * TODO: Start the movement in the start of the tunnel
- * TODO: Only move forward 
- * TODO: Measure:
- *  - time
+ * TODO: Build the path of spheres
+ * TODO: Constrain the movement in the space
+ * TODO: Draw floor
+ * TODO: Draw background
+ * TODO: Draw an indicator arrow, show the next sphere, at last the target
+ * TODO: Change the color of the sphere when is active
+ * TODO: Measure for each interval of each trial:
+ *  - time: time starting when enter
+ *  - speed
  *  - start point
- *  - end point 
- *  - curves in the bezier tunnel 
- *  - deviation of the original path 
- *  - collisions 
+ *  - end point
+ *  - radius ini
+ *  - radius end
+ *  - real trajectory (list of points)
+ *  - deviation of the original path
  *  - stop times 
- *  - lost sensing hands - 
+ *  - lost sensing hands
+ *  - input point (where avatar enter in the marker sphere)
+ *  - error in with (We) (distance between axis of the trajectory and input point)
+ *  - error id distance (De) (distance between start point and the input point)
+ *  - error in trajectory (Te) (average of the distance between trajectory and real trajectory)
  * TODO: Calculate:
  *  - Quantitative Throughput 
  *  -
@@ -52,27 +62,39 @@ public class Devices3d extends PApplet {
 	Avatar avatar; 	// Sight of the camera. Avatar is used to control the camera
 	Device device;	// Current Device 
 	
-	PVector left; 	// Vector with screen position of the Left Hand returned by the device
-	PVector right; 	// Vector with screen position of the Right Hand returned by the device
+	PVector left; 	// Vector with screen position of the Left Hand returned by the device (only for Kinect)
+	PVector right; 	// Vector with screen position of the Right Hand returned by the device (only for Kinect)
 	PVector trans; 	// Vector with translation values returned by the device
 	PVector rotat; 	// Vector with rotation values returned by the device
 	
-	Marker target;
-	int cantMarkers;
-	Marker[] markers;
+	//PARAMETERS
+	float size;			//Size of the space (x and y)
+	float high;			//High of the space (z)
+	int divisions;		//Number of divisions of the floor and ceiling
+	Color spaceColor;	//Color of the space
+	
+	Trial trial;	//Testing trials
+	
 	
 	public void setup() {
-		size(1910,800, P3D);
+		size(1910,1080, P3D);
 		scene = new Scene(this);
+		scene.setGridIsDrawn(false);
+		
+		//Set the space of the experiments
+		size=1000;
+		high=300;
+		divisions=60;
+		spaceColor=new Color(180,252,254,100);
 		
 		//Initialize the vectors
 		left=right=trans=rotat= new PVector(0, 0, 0);
 		
 		//Configure the avatar
-		avatar=new Avatar(this,scene,new PVector(50,100,10),new Quaternion(new PVector(0, 0, 1), new PVector(0,10,0)));
+		avatar=new Avatar(this,scene,new PVector(size,size,10));
 		
 		//Define the current device
-		device=Device.KINECT;
+		device=Device.SPACENAVIGATOR;
 		switch (device){
 			case KINECT:
 				kinect = new Kinect(this,scene);
@@ -92,35 +114,31 @@ public class Devices3d extends PApplet {
 				avatar.drawHands(false);
 				break;
 			default : 
-				println("device: "+device);
+				//Using the mouse
 		}
-				
+		println("Device: "+device);		
 
-		//Create the markers and the target
-		PVector direction=new PVector(0,0,1);
-		Quaternion orientation=new Quaternion(new PVector(0, 0, 1), direction);
-		Color color=new Color(255,0,0);
-		target=new Marker(this,scene,new PVector(0,-200,0),orientation,50,color);
+		//Trial for testing
+		trial=new Trial(this,scene,20);
 		
-		cantMarkers=10;
-		markers=new Marker[cantMarkers];
-		float min=-200,max=200;
-		for(int i=0;i<cantMarkers;i++){
-			PVector directionM=new PVector(random(min,max),random(min,max),random(min,max));
-			Quaternion orientationM=new Quaternion(new PVector(0, 0, 1), directionM);
-			Color colorM=new Color((int)random(255),(int)random(255),(int)random(255));
-			markers[i]=new Marker(this,scene,new PVector(random(min,max),random(min,max),random(min,max)),orientationM,10,colorM);
-		}
+		String[] lines = new String[3];
+		lines[0] = "hola";
+		lines[1] = "in";
+		lines[2] = "mundo";
+		saveStrings("data/lines.txt", lines);
+		
 		smooth();
 	}
 
 	public void draw() {
 		background(0);
+		
 		//Draw the markers and the target
-		target.draw();
-		for(int i=0;i<cantMarkers;i++){
-			markers[i].draw();
-		}
+		trial.draw();
+		
+		//Draw the experiment space
+		drawSpace(size,high,divisions,avatar.getRadius(),spaceColor);
+		
 		//Execute the draw an load data from the device selected
 		switch (device){
 			case KINECT:
@@ -163,5 +181,77 @@ public class Devices3d extends PApplet {
 	public void loadSpaceData(){
 		trans = space.translationVector();
 		rotat = space.rotationVector();
+	}
+	
+	/**
+	 * Draw the space: ceiling, floor, columns and set the camera constraints
+	 * */
+	public void drawSpace(float size,float high,int divisions,float avatarRadius,Color color){
+		//Draw the floor and ceiling
+		drawGrid(size,divisions,0,0,0,color);
+		drawGrid(size,divisions,0,0,high,color);
+		//Draw the columns
+		drawColumns(size,high,color);
+		//Constraint the camera to the box
+		boxConstraint(avatarRadius,size-avatarRadius,avatarRadius,size-avatarRadius,avatarRadius,high-avatarRadius);
+	}
+	
+	/**
+	 * Draw four columns, one in each corner
+	 * */
+	public void drawColumns(float size,float high,Color color){
+		pushStyle();
+			stroke(color.getRGB(),color.getAlpha());
+			strokeWeight(3);
+			line(0,0,0,0,0,high);
+			line(size,0,0,size,0,high);
+			line(size,size,0,size,size,high);
+			line(0,size,0,0,size,high);
+		popStyle();
+	}
+	/**
+	 * Draws a grid with @size in the XY plane, centered on (x,y) with high z (defined in the current
+	 * coordinate system).
+	 * */
+	public void drawGrid(float size,int divisions,float x,float y,float z,Color color){
+		pushStyle();
+			stroke(color.getRGB(),color.getAlpha());
+			strokeWeight(1);
+			beginShape(LINES);
+				float midSize=size/2;
+				for (int i = 0; i <= divisions; ++i) {
+					final float pos = (midSize * (2.0f * i / divisions - 1.0f));
+					float diffX=midSize+x;
+					float diffY=midSize+y;
+					vertex(diffX+pos , diffY-midSize,z);
+					vertex(diffX+pos , diffY+midSize,z);
+					vertex(diffX-midSize, diffY+pos,z);
+					vertex(diffX+midSize, diffY+pos,z);
+				}
+			endShape();
+		popStyle();
+	}
+	/**
+	 * Constraint the camera in the specified box
+	 * */
+	public void boxConstraint(float minX,float maxX,float minY,float maxY,float minZ,float maxZ){
+		PVector pos=scene.camera().position();
+		//Correct X position
+		if(pos.x<=minX)
+			pos.x=minX;
+		if(pos.x>=maxX)
+			pos.x=maxX;
+		//Correct Y position
+		if(pos.y<=minY)
+			pos.y=minY;
+		if(pos.y>=maxY)
+			pos.y=maxY;
+		//Correct Z position
+		if(pos.z<=minZ)
+			pos.z=minZ;
+		if(pos.z>=maxZ)
+			pos.z=maxZ;
+		//Restore the camera position
+		scene.camera().setPosition(pos);
 	}
 }

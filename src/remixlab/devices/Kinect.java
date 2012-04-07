@@ -34,8 +34,6 @@ public class Kinect {
 	PVector trans;						// The vector with translation values returned by the device
 	PVector rotat;						// The vector with rotation values returned by the device
 	PVector starting;					// Start position, set when two hands are detected
-	Hand[] hands;
-	
 	/////////////////////////////////////// CONSTRUCTORS ///////////////////////////////////////
 	/**
 	 * Kinect Constructor 
@@ -64,23 +62,16 @@ public class Kinect {
 		flowRouter.SetActive(ctrlPoint);
 		// Set the session manager
 		sessionManager.AddListener(flowRouter);
-		
 		//Initialize the device to send data
 		device = new HIDevice(scene);
 		device.addHandler(this,"feed");
 		device.setTranslationSensitivity(0.03f, 0.03f, 0.03f);
 		device.setRotationSensitivity(0.0001f, 0.0001f, 0.0001f);
-		
 		// Initialize the hands
 		left = new Hand(new Color(255, 0, 0));
 		right = new Hand(new Color(0, 255, 0));
 		//Initialize movements vectors
 		trans=rotat=new PVector(0,0,0);
-		
-		//Auxiliary array to define left and hand
-		hands=new Hand[2];
-		hands[0]=new Hand();
-		hands[1]=new Hand();
 	}
 	
 	/////////////////////////////////////// GET AND SET ///////////////////////////////////////
@@ -155,6 +146,8 @@ public class Kinect {
 		context.update();
 		// update nite
 		context.update(sessionManager);
+		// Update left and right with the data of the Control Point
+		setHands(ctrlPoint.hands);
 	}
 	/**
 	 * Return the Kinect as the input device
@@ -232,19 +225,15 @@ public class Kinect {
 		}
 	}
 	/**
-	 * Get the callback signal when a hand is updated in the sensor
-	 * TODO: Optimize the pass of the handPoint to left/right, many steps
+	 * Set the hands with data from the sensor
 	 * */
-	public void setHands(long handId, PVector handPoint) {
-		// Assign the point to the hand using module
-		hands[(int) (handId % 2)].setPoint(handPoint);
-		//PApplet.println("handPoint["+handId+"]: "+handPoint);
-		if(hands[0].getPoint().x < hands[1].getPoint().x) {
-			left = hands[0];
-			right = hands[1];
+	public void setHands(PVector[] hands) {
+		if(hands[0].x < hands[1].x) {
+			left.setPoint(hands[0]);
+			right.setPoint(hands[1]);
 		}else{
-			left = hands[1];
-			right = hands[0];
+			left.setPoint(hands[1]);
+			right.setPoint(hands[0]);
 		}
 	}
 	/**

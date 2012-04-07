@@ -44,8 +44,8 @@ public class SpaceNavigator{
 		//Initialize the device to send data
 		device = new HIDevice(scene);
 		device.addHandler(this,"feed");
-		device.setTranslationSensitivity(0.003f, 0.003f, 0.002f);
-		device.setRotationSensitivity(0.00005f, 0.00005f, 0.00005f);
+		device.setTranslationSensitivity(0.03f, 0.03f, 0.03f);
+		device.setRotationSensitivity(0.00008f, 0.00008f, 0.00008f);
 		//Initialize the controls of the device
 		controllIO = ControllIO.getInstance(parent);
 		space = controllIO.getDevice("3Dconnexion SpaceNavigator");

@@ -21,6 +21,7 @@ public class Avatar {
 	InteractiveAvatarFrame frame;	// Frame using to port the camera
 	PVector position;				// Position vector of the Avatar
 	Quaternion orientation;			// Orientation of the Avatar
+	float radius;					// Radius of the Avatar
 	//Conditionals to draw elements of the Avatar
 	boolean drawTranslation;
 	boolean drawRotation;
@@ -35,14 +36,23 @@ public class Avatar {
 	float halfWidth;
 	float halfHeight;
 	/////////////////////////////////////// CONSTRUCTORS ///////////////////////////////////////
-	public Avatar(PApplet p,Scene s,PVector pos,Quaternion orient){
+	public Avatar(PApplet p,Scene s){
+		this(p,s,new PVector(990,990,10),new Quaternion(new PVector(0,0,1), new PVector(0,1,0)),10);
+	}
+	public Avatar(PApplet p,Scene s,PVector pos){
+		this(p,s,pos,new Quaternion(new PVector(0,0,1), new PVector(0,1,0)),10);
+	}
+	public Avatar(PApplet p,Scene s,PVector pos,Quaternion orient,float radi){
 		parent=p;
 		scene=s;
 		position=pos;
 		orientation=orient;
+		radius=radi;
 		//Configure the avatar
 		scene.camera().setPosition(position);
 		scene.camera().setOrientation(orientation);
+		scene.camera().lookAt(new PVector(0,0,0));
+				
 		//Configure the styles
 		alpha=80;
 		width=parent.width;
@@ -56,6 +66,10 @@ public class Avatar {
 		drawSight=true;
 		drawDepthImage=true;
 		drawRGBImage=true;
+	}
+	/////////////////////////////////////// GET AND SET ///////////////////////////////////////
+	public float getRadius(){
+		return radius;
 	}
 	/////////////////////////////////////// METHODS ///////////////////////////////////////
 	/**
