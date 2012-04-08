@@ -35,6 +35,12 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="devices3d/lib/user/procontroll"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/user/controlP5/controlP5.jar" sourcepath="/home/alejo/tesis2/sketches/libraries/controlP5/src">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="devices3d/lib/user/controlP5"/>
+			<attribute name="javadoc_location" value="file:/home/alejo/tesis2/sketches/libraries/controlP5/reference/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="lib/user/SimpleOpenNI/SimpleOpenNI.jar">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="devices3d/lib/user/SimpleOpenNI"/>

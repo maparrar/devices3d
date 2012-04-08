@@ -1,52 +1,44 @@
+/**
+ * devices3d - Library to test devices in 3D (https://github.com/maparrar/devices3d)
+ * National University of Colombia - Remixlab
+ * @author Miguel Alejandro Parra Romero [maparrar@unal.edu.co]
+ * @author Jean Pierre Charalambos [jpcharalambosh@unal.edu.co]
+ * 
+ * Trial Class
+ * */
 package remixlab.experiments;
 
-import java.awt.Color;
-
-import processing.core.PApplet;
-import processing.core.PVector;
-import remixlab.proscene.Scene;
+import java.util.ArrayList;
+import remixlab.experiments.Experiment.State;
 
 public class Trial {
-	PApplet parent;
-	Scene scene;
-	PVector start;
-	PVector end;
-	
-	Marker target;
-	Marker[] markers;
-	
+	int id;			//Identifier to the trial
+	State state;		//State of the trial
+	ArrayList<Interval> intervals = new ArrayList<Interval>();
 	
 	/////////////////////////////////////// CONSTRUCTORS ///////////////////////////////////////
-	public Trial(PApplet p,Scene sc,int numMarkers){
-		parent = p;
-		scene = sc;
-		
-		
-		
-		
-		
-		//Create the markers and the target
-		Color color=new Color(255,0,0);
-		float radiusTarget=20;
-		target=new Marker(parent,scene,new PVector(1000-radiusTarget,radiusTarget,radiusTarget),radiusTarget,color);
-				
-				
-		markers=new Marker[numMarkers];
-		float radius=20;
-		float min=radius,max=1000;
-		for(int i=0;i<markers.length;i++){
-			Color colorM=new Color((int)parent.random(255),(int)parent.random(255),(int)parent.random(255));
-			markers[i]=new Marker(parent,scene,new PVector(parent.random(min,max),parent.random(min,max),parent.random(min,100)),radius,colorM);
-		}
+	public Trial(int _id){
+		id=_id;
+		//Set the starting state
+		state=State.BEFORE;
 	}
 	/////////////////////////////////////// GET AND SET ///////////////////////////////////////
-	/////////////////////////////////////// METHODS ///////////////////////////////////////
+	/**
+	 * Return the state of the trial
+	 * */
+	public State state(){
+		return state;
+	}
 	
+	/////////////////////////////////////// METHODS ///////////////////////////////////////
 	public void draw(){
-		//Draw the markers and the target
-		target.draw();
-		for(int i=0;i<markers.length;i++){
-			markers[i].draw();
+		if(state==State.RUNNING){
+			for(int i=0;i<intervals.size();i++){
+				intervals.get(i).draw();
+			}
 		}
+	}
+	public void addInterval(Interval interval){
+		intervals.add(interval);
 	}
 }

@@ -11,13 +11,14 @@ package remixlab.devices;
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PVector;
+import remixlab.experiments.Sketch;
 import remixlab.proscene.InteractiveAvatarFrame;
 import remixlab.proscene.Quaternion;
 import remixlab.proscene.Scene;
 
 public class Avatar {
 	PApplet parent;
-	Scene scene;
+	Sketch scene;
 	InteractiveAvatarFrame frame;	// Frame using to port the camera
 	PVector position;				// Position vector of the Avatar
 	Quaternion orientation;			// Orientation of the Avatar
@@ -36,13 +37,13 @@ public class Avatar {
 	float halfWidth;
 	float halfHeight;
 	/////////////////////////////////////// CONSTRUCTORS ///////////////////////////////////////
-	public Avatar(PApplet p,Scene s){
+	public Avatar(PApplet p,Sketch s){
 		this(p,s,new PVector(990,990,10),new Quaternion(new PVector(0,0,1), new PVector(0,1,0)),10);
 	}
-	public Avatar(PApplet p,Scene s,PVector pos){
+	public Avatar(PApplet p,Sketch s,PVector pos){
 		this(p,s,pos,new Quaternion(new PVector(0,0,1), new PVector(0,1,0)),10);
 	}
-	public Avatar(PApplet p,Scene s,PVector pos,Quaternion orient,float radi){
+	public Avatar(PApplet p,Sketch s,PVector pos,Quaternion orient,float radi){
 		parent=p;
 		scene=s;
 		position=pos;
@@ -51,7 +52,7 @@ public class Avatar {
 		//Configure the avatar
 		scene.camera().setPosition(position);
 		scene.camera().setOrientation(orientation);
-		scene.camera().lookAt(new PVector(0,0,0));
+		scene.camera().lookAt(new PVector(1000,1000,0));
 				
 		//Configure the styles
 		alpha=80;
