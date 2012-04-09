@@ -14,7 +14,6 @@ import processing.core.PVector;
 import remixlab.experiments.Sketch;
 import remixlab.proscene.InteractiveAvatarFrame;
 import remixlab.proscene.Quaternion;
-import remixlab.proscene.Scene;
 
 public class Avatar {
 	PApplet parent;
@@ -50,9 +49,7 @@ public class Avatar {
 		orientation=orient;
 		radius=radi;
 		//Configure the avatar
-		scene.camera().setPosition(position);
-		scene.camera().setOrientation(orientation);
-		scene.camera().lookAt(new PVector(1000,1000,0));
+		setPosition(position);
 				
 		//Configure the styles
 		alpha=80;
@@ -71,6 +68,12 @@ public class Avatar {
 	/////////////////////////////////////// GET AND SET ///////////////////////////////////////
 	public float getRadius(){
 		return radius;
+	}
+	public void setPosition(PVector pos){
+		position=pos;
+		scene.camera().setPosition(position);
+		scene.camera().setOrientation(orientation);
+		scene.camera().lookAt(new PVector(1000,1000,0));
 	}
 	/////////////////////////////////////// METHODS ///////////////////////////////////////
 	/**
@@ -182,7 +185,7 @@ public class Avatar {
 	private void drawSight(){
 		parent.noFill();
 		parent.strokeWeight(2);
-		parent.stroke(100, 255, 0, alpha);
+		parent.stroke(100, 255, 0, 255);
 		parent.ellipse(halfWidth,halfHeight,30,30);
 		parent.line(halfWidth-25,halfHeight,halfWidth+25,halfHeight);
 		parent.line(halfWidth,halfHeight-25,halfWidth,halfHeight+25);

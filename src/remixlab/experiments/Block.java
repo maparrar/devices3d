@@ -9,16 +9,20 @@
 package remixlab.experiments;
 
 import java.util.ArrayList;
+import processing.core.PVector;
 
 import remixlab.experiments.Experiment.State;
 
 public class Block {
+	Sketch sketch;
 	int id;			//Identifier to the block
-	State state;		//State of the block
+	State state;	//State of the block
 	ArrayList<Trial> trials = new ArrayList<Trial>();
+	int currentTrial;//Current trial
 	
 	/////////////////////////////////////// CONSTRUCTORS ///////////////////////////////////////
-	public Block(int _id){
+	public Block(Sketch s,int _id){
+		sketch = s;
 		id=_id;
 		//Set the starting state
 		state=State.BEFORE;
@@ -31,11 +35,30 @@ public class Block {
 		return state;
 	}
 	/////////////////////////////////////// METHODS ///////////////////////////////////////
-	public void draw(){
-		if(state==State.RUNNING){
-			for(int i=0;i<trials.size();i++){
-				trials.get(i).draw();
+	public void init(){
+		state=State.RUNNING;
+		currentTrial=0;
+	}
+	public void draw(PVector camera){
+		//Show the current trial
+		if(currentTrial<trials.size()){
+			if(trials.get(currentTrial).state()==State.BEFORE){
+				trials.get(currentTrial).init();
+			}else if(trials.get(currentTrial).state()==State.RUNNING){
+				trials.get(currentTrial).draw(camera);
+			}else{
+				sketch.restartAvatar();
+				currentTrial++;
 			}
+		}else{
+			state=State.AFTER;
+		}
+	}
+	public void reinit(){
+		state=State.BEFORE;
+		currentTrial=0;
+		for(int i=0;i<trials.size();i++){
+			trials.get(i).reinit();
 		}
 	}
 	public void addTrial(Trial trial){

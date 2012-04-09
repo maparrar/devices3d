@@ -9,34 +9,20 @@
 package remixlab.experiments;
 
 import java.awt.Color;
-
-//import devices3d.Devices3d.Device;
 import processing.core.PApplet;
 import processing.core.PVector;
-import remixlab.devices.Avatar;
-import remixlab.devices.Kinect;
-import remixlab.devices.SpaceNavigator;
-import remixlab.devices.Wiimote;
+import remixlab.devices.*;
+import remixlab.experiments.Experiment.Device;
+import remixlab.experiments.Experiment.State;
 import remixlab.proscene.Scene;
 
 public class Sketch extends Scene {
+	//ATTRIBUTES
 	PApplet p;
-	String identification;		//User identification
-	
-	//Enum of devices
-	public enum Devices {KINECT,WIIMOTE,MOUSE,SPACENAVIGATOR}
-	
-	Kinect kinect; 	// Kinect device class
-	Wiimote wiimote;// Wiimote device class
-	SpaceNavigator space;// SpaceNavigator device class
-//	Scene scene; 	// 3D Scene
-	Avatar avatar; 	// Sight of the camera. Avatar is used to control the camera
-	Devices device;	// Current Device 
-	
-	PVector left; 	// Vector with screen position of the Left Hand returned by the device (only for Kinect)
-	PVector right; 	// Vector with screen position of the Right Hand returned by the device (only for Kinect)
-	PVector trans; 	// Vector with translation values returned by the device
-	PVector rotat; 	// Vector with rotation values returned by the device
+	String identification;	//User identification
+	Experiment experiment;	//Experiment object
+	Avatar avatar; 			// Sight of the camera. Avatar is used to control the camera
+	PVector start;			//Start position of the avatar
 	
 	//PARAMETERS
 	float size;			//Size of the space (x and y)
@@ -44,134 +30,57 @@ public class Sketch extends Scene {
 	int divisions;		//Number of divisions of the floor and ceiling
 	Color spaceColor;	//Color of the space
 	
-	Trial trial;	//Testing trials
-	
 	/////////////////////////////////////// CONSTRUCTORS ///////////////////////////////////////
 	public Sketch(PApplet p){
 		super(p);
 	}
+	
 	/////////////////////////////////////// GET AND SET ///////////////////////////////////////
 	public void setIdentification(String identif){
 		identification=identif;
+		experiment.setIdentification(identification);
 	}
 
 	/////////////////////////////////////// METHODS ///////////////////////////////////////
 	public void init() {
 		p=super.parent;
 		this.setGridIsDrawn(false);
-		
 		//Set the space of the experiments
 		size=2000;
 		high=300;
 		divisions=60;
-		spaceColor=new Color(180,252,254,100);
-		
-		//Initialize the vectors
-		left=right=trans=rotat= new PVector(0, 0, 0);
-		
+		spaceColor=new Color(180,252,254,255);
 		//Configure the avatar
-		PVector start=new PVector(10,10,150);
+		start=new PVector(10,10,150);
 		avatar=new Avatar(p,this,start);
-		
-		
-		
-		long identification=00;
-		Experiment exp=new Experiment(p,this,identification);
-//		exp.printBlocks();
-		
-		
-		
-		//Define the current device
-		device=Devices.SPACENAVIGATOR;
-		switch (device){
-			case KINECT:
-				kinect = new Kinect(p,this);
-				this.addDevice(kinect.getDevice());
-//				scene.disableMouseHandling();
-				break;
-			case WIIMOTE:
-				wiimote=new Wiimote(p,this);
-				this.addDevice(wiimote.getDevice());
-//				scene.disableMouseHandling();
-				avatar.drawHands(false);
-				break;
-			case SPACENAVIGATOR:
-				space=new SpaceNavigator(p,this);
-				this.addDevice(space.getDevice());
-//				scene.disableMouseHandling();
-				avatar.drawHands(false);
-				break;
-			default : 
-				//Using the mouse
-		}
-		PApplet.println("Device: "+device);		
-
-		
-		
-		
-		
-		
-		parent.smooth();
+		//Configure the experiment
+		experiment=new Experiment(p,this);
+		p.smooth();
 	}
 	//Draw replace
 	public void proscenium() {
 		p.background(0);
-		
-		
-		PApplet.println("identification: "+identification);
-		
 		//Draw the experiment space
 		drawSpace(size,high,divisions,avatar.getRadius(),spaceColor);
-		
-		//Execute the draw an load data from the device selected
-		switch (device){
-			case KINECT:
-				kinect.draw();
-				loadKinectData();
-				break;
-			case WIIMOTE:
-				wiimote.draw();
-				loadWiimoteData();
-				break;
-			case SPACENAVIGATOR:
-				loadSpaceData();
-			default : 
-				
+		//Draw the experiment
+		if(experiment.state==State.RUNNING){
+			experiment.draw();
+			if(experiment.getDevice()!=Device.KINECT){
+				avatar.drawHands(false);
+			}
+			// Draw the graphics elements of the Avatar
+			avatar.draw(experiment.trans,experiment.rotat,experiment.left,experiment.right);
+		}else{
+			PApplet.println("Experiment ended");
 		}
-		// Draw the graphics elements of the Avatar
-		avatar.draw(trans,rotat,left,right);
-	}
-	
-	
-	
-
-	
-	
-	/////////////////////////////////////// LOADERS ///////////////////////////////////////
-	/**
-	 * Load the Kinect data to display in the avatar
-	 * */
-	public void loadKinectData(){
-		left = kinect.screenHand("left");
-		right = kinect.screenHand("right");
-		trans = kinect.translationVector();
-		rotat = kinect.rotationVector();
 	}
 	/**
-	 * Load the Wiimote data to display in the avatar
+	 * Restart the Avatar to the original position
 	 * */
-	public void loadWiimoteData(){
-		trans = wiimote.translationVector();
-		rotat = wiimote.rotationVector();
+	public void restartAvatar(){
+		avatar.setPosition(new PVector(10,10,150));
 	}
-	/**
-	 * Load the SpaceNavigator data to display in the avatar
-	 * */
-	public void loadSpaceData(){
-		trans = space.translationVector();
-		rotat = space.rotationVector();
-	}
-	
+	/////////////////////////////////////// GRAPHIC METHODS ///////////////////////////////////////
 	/**
 	 * Draw the space: ceiling, floor, columns and set the camera constraints
 	 * */
@@ -184,7 +93,6 @@ public class Sketch extends Scene {
 		//Constraint the camera to the box
 		boxConstraint(avatarRadius,size-avatarRadius,avatarRadius,size-avatarRadius,avatarRadius,high-avatarRadius);
 	}
-	
 	/**
 	 * Draw four columns, one in each corner
 	 * */

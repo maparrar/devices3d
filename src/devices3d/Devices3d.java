@@ -17,28 +17,16 @@ import remixlab.experiments.*;
  * TODO: Draw an indicator arrow, show the next sphere, at last the target
  * TODO: Change the color of the sphere when is active
  * TODO: Measure for each interval of each trial:
- *  - time: time starting when enter
- *  - speed
- *  - start point
+ * 	- insideInterval: inside point in interval coordinates
+ * 	- insideWorld: inside point in world coordinates
+ * 	- start point
  *  - end point
- *  - radius ini
- *  - radius end
- *  - real trajectory (list of points)
+ *  - radius
+ *  - time: time starting when enter
+ * -------
  *  - deviation of the original path
- *  - stop times 
- *  - lost sensing hands
- *  - input point (where avatar enter in the marker sphere)
- *  - error in with (We) (distance between axis of the trajectory and input point)
- *  - error id distance (De) (distance between start point and the input point)
- *  - error in trajectory (Te) (average of the distance between trajectory and real trajectory)
  * TODO: Calculate:
  *  - Quantitative Throughput 
- *  -
- * TODO:
- *  - Compare Kinect aerial view
- *  - Mouse and keyboard interaction
- *  - Wiimote interaction
- *  - SpaceNavigator integration
  *  TODO: Improve the sensitivity of all devices
  * */
 
@@ -48,7 +36,7 @@ public class Devices3d extends PApplet {
 	ControlP5 controlP5;		//GUI manager
 	Textfield myTextfield;		//Identification textfield
 	public void setup() {
-		size(1910,800,P3D);
+		size(1910,870,P3D);
 		//Setup the identification textfield
 		controlP5 = new ControlP5(this);
 		myTextfield = controlP5.addTextfield("identif",100,160,500,25);

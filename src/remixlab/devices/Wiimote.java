@@ -47,8 +47,8 @@ public class Wiimote{
 		//Initialize the device to send data
 		device = new HIDevice(scene);
 		device.addHandler(this,"feed");
-		device.setTranslationSensitivity(0.003f, 0.003f, 0.002f);
-		device.setRotationSensitivity(0.00005f, 0.00005f, 0.00005f);
+		device.setTranslationSensitivity(0.003f, 0.003f, 0.01f);
+		device.setRotationSensitivity(0.0001f, 0.00005f, 0.00005f);
 		
 		//Initialize the controls of the device
 		controllIO = ControllIO.getInstance(parent);
@@ -86,9 +86,9 @@ public class Wiimote{
 	 * */
 	public void draw() {
 		//Lock the mouse pointer
-//		robot.mouseMove(parent.width/2,parent.height/2);
+		robot.mouseMove(parent.width/2,parent.height/2);
 		
-		PApplet.println("ACC: "+acc.getValue()+" :: IR: "+ir.getX()+","+ir.getY());
+//		PApplet.println("ACC: "+acc.getValue()+" :: IR: "+ir.getX()+","+ir.getY());
 	}	
 	/**
 	 * Feed the translations and rotations to the scene, gives the hand positions
@@ -119,7 +119,7 @@ public class Wiimote{
 		float multip=160;
 		rotat=new PVector(0,0,0);
 //		//TODO: Define a control to y-rotation
-		rotat.x=-ir.getX()*multip;
+		rotat.x=ir.getX()*multip;
 		rotat.y=ir.getY()*multip;
 		rotat.z=0;
 		return rotat;
